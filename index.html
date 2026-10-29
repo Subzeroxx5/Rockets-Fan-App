@@ -1,0 +1,1091 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clutch City XP</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#CE1141; --red2:#ff2d55; --ink:#0a0a0d; --card:#141419; --card2:#1d1d24; --line:#2a2a33;
+  --text:#f4f4f7; --muted:#9a9aab; --silver:#c4ced4; --gold:#f5c542; --bronze:#d08a3c; --green:#3ddc84;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,sans-serif;background:#060608;color:var(--text);min-height:100vh;
+  background-image:radial-gradient(circle at 20% 10%,#2a0712 0,transparent 45%),radial-gradient(circle at 85% 90%,#1a0610 0,transparent 40%)}
+button{font:inherit;cursor:pointer;border:none;color:inherit;background:none}
+svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.h{font-family:"Bebas Neue",Impact,sans-serif;letter-spacing:.03em;font-weight:400}
+.wrap{display:flex;gap:40px;justify-content:center;align-items:flex-start;padding:32px 16px;flex-wrap:wrap}
+
+/* PHONE SHELL */
+.phone{width:390px;height:820px;border-radius:50px;background:var(--ink);border:10px solid #1c1c22;
+  box-shadow:0 0 0 2px #34343c,0 30px 80px rgba(206,17,65,.25);position:relative;overflow:hidden;display:flex;flex-direction:column}
+.notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:118px;height:28px;background:#1c1c22;border-radius:0 0 18px 18px;z-index:50}
+.status{position:absolute;top:0;left:0;right:0;height:44px;display:flex;justify-content:space-between;align-items:center;padding:6px 28px 0;font-size:13px;font-weight:700;z-index:40;pointer-events:none}
+main{flex:1;overflow-y:auto;scrollbar-width:none;padding-top:44px;position:relative}
+main::-webkit-scrollbar{display:none}
+.pad{padding:0 14px 20px}
+nav.tabs{flex:none;display:flex;border-top:1px solid var(--line);background:#0d0d11;padding:7px 2px 20px}
+nav.tabs button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9.5px;color:var(--muted);padding:4px 0;font-weight:600}
+nav.tabs button.on{color:var(--red2)}
+nav.tabs button.on svg{fill:var(--red2);stroke:var(--red2)}
+
+/* TOP BARS */
+.topbar{display:flex;align-items:center;gap:10px;padding:10px 16px 12px;border-bottom:1px solid var(--line);margin-bottom:14px;position:sticky;top:0;background:var(--ink);z-index:5}
+.topbar .t{flex:1;font-weight:700;font-size:16px}
+.topbar .center{flex:1;display:flex;align-items:center;justify-content:center;gap:8px}
+.topbar .center .h{font-size:24px}
+.back{display:flex;align-items:center;gap:2px;font-size:14px;color:var(--text)}
+.iconbtn{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;position:relative;color:var(--text)}
+.iconbtn b{position:absolute;top:0;right:0;background:var(--red);font-size:9px;min-width:16px;height:16px;border-radius:8px;display:grid;place-items:center}
+
+/* HOME HERO */
+.homehero{position:relative;margin-top:-44px;padding:70px 20px 26px;text-align:center;overflow:hidden;
+  background:
+   radial-gradient(ellipse at 50% 120%,rgba(206,17,65,.55),transparent 60%),
+   radial-gradient(circle at 12% 30%,rgba(255,60,90,.45) 0,transparent 8%),
+   radial-gradient(circle at 88% 26%,rgba(255,60,90,.4) 0,transparent 7%),
+   radial-gradient(circle at 30% 18%,rgba(255,255,255,.25) 0,transparent 3%),
+   radial-gradient(circle at 70% 14%,rgba(255,255,255,.25) 0,transparent 3%),
+   linear-gradient(180deg,#1a0309,#0a0a0d)}
+.homehero::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(100deg,transparent 0 22px,rgba(255,255,255,.025) 22px 24px)}
+.homehero .bell{position:absolute;top:52px;right:14px}
+.homehero h1{font-family:"Bebas Neue";font-weight:400;font-size:44px;letter-spacing:.02em;line-height:1;margin-top:8px;position:relative}
+.homehero p{font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin-top:6px;opacity:.9;position:relative;line-height:1.5}
+
+/* CARDS & ROWS */
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
+.card h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:10px;font-weight:700}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.prof{display:flex;align-items:center;gap:12px}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(#cfd3d8,#8b939b);display:grid;place-items:center;flex:none;border:2px solid #3a3a44;overflow:hidden}
+.avatar svg{width:70%;height:70%;fill:#fff;stroke:none;margin-top:18%}
+.ptsbox{margin-left:auto;text-align:center;border-left:1px solid var(--line);padding-left:14px}
+.ptsbox .h{font-size:24px;line-height:1}
+.ptsbox small{font-size:9px;font-weight:700;letter-spacing:.06em;display:block;border-bottom:2px solid var(--red);padding-bottom:2px}
+.mrow{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:9px;transition:.15s}
+.mrow:active{transform:scale(.985)}
+.mrow.hot{border-color:var(--red);box-shadow:inset 0 0 0 1px var(--red),0 0 18px rgba(206,17,65,.25);background:linear-gradient(90deg,rgba(206,17,65,.16),var(--card))}
+.mrow .ic{width:40px;height:40px;border-radius:50%;border:1.6px solid var(--red2);display:grid;place-items:center;color:var(--red2);flex:none}
+.mrow .tx{flex:1}
+.mrow b{font-size:14px;font-weight:600;display:block}
+.mrow span{font-size:11px;color:var(--muted)}
+.mrow .chev{color:var(--muted)}
+.sw{width:40px;height:23px;border-radius:20px;background:var(--line);position:relative;transition:.2s;flex:none}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:17px;height:17px;border-radius:50%;background:#fff;transition:.2s}
+.sw.on{background:var(--red)} .sw.on::after{left:20px}
+.btn{background:var(--red);color:#fff;font-weight:700;font-size:13px;padding:11px 14px;border-radius:12px;transition:.15s;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn:active{transform:scale(.97)} .btn:disabled{background:var(--card2);color:var(--muted);cursor:default}
+.btn.ghost{background:var(--card2);border:1px solid var(--line)}
+.btn.out{background:transparent;border:1.5px solid var(--red);color:var(--text)}
+.btn.full{width:100%}
+.btn.sm{font-size:11px;padding:7px 12px;border-radius:9px}
+.pill{font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;background:var(--card2);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.pill.red{background:rgba(206,17,65,.18);color:var(--red2)} .pill.gold{background:rgba(245,197,66,.15);color:var(--gold)} .pill.green{background:rgba(61,220,132,.13);color:var(--green)}
+.muted{color:var(--muted);font-size:12px}
+.bar{height:8px;border-radius:8px;background:#2a2a33;overflow:hidden}
+.bar > div{height:100%;background:var(--red);border-radius:8px;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.seg{display:flex;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:3px;margin-bottom:14px}
+.seg button{flex:1;padding:8px 0;font-size:12px;font-weight:600;color:var(--muted);border-radius:9px}
+.seg button.on{background:var(--red);color:#fff}
+.lbl{font-size:15px;font-weight:700;margin:4px 0 8px}
+.tierrow{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:12px}
+.tierrow.next{border-color:var(--gold)}
+.tierrow .h{font-size:24px;line-height:1}
+.tierrow p{font-size:11px;color:var(--muted);margin-top:2px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+.stats div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;gap:9px;align-items:center}
+.stats svg{color:var(--red2)}
+.stats small{font-size:10px;color:var(--muted);display:block}
+.stats b{font-size:18px}
+.badges{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+.badge{flex:none;width:68px;text-align:center;font-size:10px;font-weight:600}
+.badge .ring{width:54px;height:54px;border-radius:50%;margin:0 auto 5px;display:grid;place-items:center;font-size:22px;border:2px solid var(--red);background:radial-gradient(#2a0a12,#141419)}
+.badge.lock{opacity:.35}
+.badge.lock .ring{border-color:var(--line);filter:grayscale(1)}
+.reward{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px;margin-bottom:9px}
+.reward .ic{width:50px;height:50px;border-radius:10px;background:linear-gradient(135deg,#CE1141,#5a0718);display:grid;place-items:center;font-size:24px;flex:none}
+.reward .t{flex:1;font-size:13px;font-weight:600}
+.reward .t small{display:block;color:var(--muted);font-weight:500;font-size:11px;margin-top:2px}
+.foot{text-align:center;font-size:11px;letter-spacing:.28em;color:var(--muted);margin:16px 0 4px}
+.concept{text-align:center;font-size:9px;color:#55556a;margin:8px 0 4px;letter-spacing:.05em}
+
+/* TIER CARDS */
+.tiers{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-bottom:6px;margin:0 -14px;padding-left:14px;padding-right:14px}
+.tcard{flex:none;width:240px;scroll-snap-align:center;border-radius:16px;border:2px solid;padding:16px 14px 12px;text-align:center;position:relative;overflow:hidden;
+  background:repeating-linear-gradient(135deg,transparent 0 26px,rgba(255,255,255,.025) 26px 28px),var(--card)}
+.tcard .h{font-size:30px;line-height:1;margin-top:6px}
+.tcard .tag{font-size:12px;opacity:.85;margin:3px 0 8px}
+.tcard .range{display:inline-block;border:1.5px solid;border-radius:20px;padding:4px 18px;font-family:"Bebas Neue";font-size:20px;letter-spacing:.04em;margin:6px 0 10px}
+.tcard ul{list-style:none;text-align:left;font-size:12px}
+.tcard ul h5{font-size:11px;letter-spacing:.1em;margin-bottom:6px}
+.tcard li{display:flex;gap:7px;align-items:center;padding:3px 0}
+.tcard .tb{margin-top:12px;width:100%;border:1.5px solid;border-radius:10px;padding:8px;font-size:12px;font-weight:600;display:flex;gap:6px;justify-content:center;align-items:center}
+
+/* ROCKET SKY */
+.sky{height:220px;border-radius:16px;position:relative;overflow:hidden;margin-bottom:12px;transition:background 1s;border:1px solid var(--line)}
+.stars{position:absolute;inset:0;transition:opacity 1s}
+.stars i{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%}
+.skyline{position:absolute;bottom:0;left:0;width:100%;transition:transform 1s cubic-bezier(.2,.8,.2,1)}
+.rocketwrap{position:absolute;left:50%;transform:translateX(-50%);width:66px;transition:bottom 1.2s cubic-bezier(.2,.8,.2,1)}
+.rocketwrap.boost{animation:shake .12s infinite}
+@keyframes shake{0%{margin-left:-1px}50%{margin-left:1px}100%{margin-left:-1px}}
+.alt{position:absolute;top:10px;left:12px;font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;background:rgba(0,0,0,.45);padding:4px 8px;border-radius:8px}
+.parts{position:absolute;bottom:10px;right:10px;display:flex;flex-direction:column;gap:3px;align-items:flex-end}
+.parts span{font-size:9px;font-weight:700;background:rgba(0,0,0,.5);padding:3px 7px;border-radius:6px}
+.parts span.lock{opacity:.45}
+
+/* SCAN */
+.scanbg{min-height:100%;margin-top:-14px;padding:20px 20px 30px;text-align:center;background:radial-gradient(ellipse at 50% 100%,rgba(206,17,65,.5),transparent 60%),linear-gradient(#0c0c10,#16060b)}
+.viewfinder{width:200px;height:200px;margin:22px auto;position:relative;display:grid;place-items:center}
+.viewfinder::before,.viewfinder::after{content:"";position:absolute;inset:0;border:4px solid var(--red2);border-radius:14px;
+  -webkit-mask:linear-gradient(#000 0 0) top left/40px 40px no-repeat,linear-gradient(#000 0 0) top right/40px 40px no-repeat,linear-gradient(#000 0 0) bottom left/40px 40px no-repeat,linear-gradient(#000 0 0) bottom right/40px 40px no-repeat;
+          mask:linear-gradient(#000 0 0) top left/40px 40px no-repeat,linear-gradient(#000 0 0) top right/40px 40px no-repeat,linear-gradient(#000 0 0) bottom left/40px 40px no-repeat,linear-gradient(#000 0 0) bottom right/40px 40px no-repeat}
+.viewfinder::after{display:none}
+.viewfinder .qr{width:140px;height:140px;background:#fff;border-radius:6px;padding:6px;box-shadow:0 0 0 6px #111}
+.scanline{position:absolute;left:18px;right:18px;height:3px;background:var(--red2);box-shadow:0 0 14px var(--red2);animation:scan 1.8s ease-in-out infinite alternate}
+@keyframes scan{from{top:20px}to{top:178px}}
+.flash{display:inline-flex;align-items:center;gap:8px;border:1.5px solid #555;border-radius:30px;padding:10px 18px;font-size:12px;margin-top:12px}
+.flash.on{border-color:var(--gold);color:var(--gold)}
+.earned{min-height:100%;margin-top:-14px;padding:40px 22px;text-align:center;position:relative;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 0,rgba(206,17,65,.4),transparent 55%),linear-gradient(#120408,#0a0a0d 60%,#1a0509)}
+.earned h2{font-family:"Bebas Neue";font-weight:400;font-size:46px;margin-top:10px}
+.earned .big{border:2px solid var(--red2);border-radius:16px;padding:16px;display:flex;align-items:center;gap:16px;margin:22px 0;text-align:left;box-shadow:0 0 30px rgba(206,17,65,.3)}
+.earned .star{width:62px;height:62px;border-radius:50%;background:var(--red);display:grid;place-items:center}
+.earned .star svg{width:30px;height:30px}
+.confetti i{position:absolute;width:6px;height:16px;background:var(--red2);border-radius:2px;animation:fall 2.6s linear forwards}
+@keyframes fall{from{transform:translateY(-40px) rotate(0)}to{transform:translateY(760px) rotate(540deg);opacity:.2}}
+
+/* PREDICT */
+.q{margin-bottom:12px}
+.q p{font-size:12px;font-weight:600;margin-bottom:6px}
+.opts{display:flex;gap:6px}
+.opts button{flex:1;padding:10px 4px;border-radius:10px;background:var(--card2);border:1px solid var(--line);font-size:12px;font-weight:700}
+.opts button.sel{background:rgba(206,17,65,.2);border-color:var(--red);color:#fff}
+.lb{display:flex;align-items:center;gap:10px;padding:9px 0;font-size:13px;border-bottom:1px solid var(--line)}
+.lb:last-child{border:none}
+.lb .n{width:22px;color:var(--muted);font-weight:700}
+.lb .av{width:30px;height:30px;border-radius:50%;background:var(--card2);display:grid;place-items:center;font-size:11px;font-weight:700}
+.lb.me{color:var(--gold);font-weight:700}
+.vs{display:flex;align-items:center;justify-content:space-around;padding:6px 0 12px}
+.team{text-align:center}
+.team .h{font-size:30px}
+.team small{font-size:10px;color:var(--muted)}
+
+/* FANTASY */
+[hidden]{display:none!important}
+.tier{flex:none;width:32px;height:24px;border-radius:7px;display:grid;place-items:center;font-family:"Bebas Neue",Impact,sans-serif;font-size:16px;letter-spacing:.02em;color:#0a0a0d}
+.t5{background:linear-gradient(135deg,#ffe28a,#c99a1c)} .t4{background:linear-gradient(135deg,#ff5c78,#CE1141);color:#fff}
+.t3{background:linear-gradient(135deg,#eef1f4,#9aa4ad)} .t2{background:linear-gradient(135deg,#f0b46a,#9a5a1f)}
+.t1{background:#3a3a44;color:#d6d6de} .t0{background:transparent;border:1.5px dashed var(--line);color:var(--muted)}
+.slot,.prow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+.slot:last-child,.prow:last-child{border-bottom:none}
+.slot.empty{font-size:12px;color:var(--muted)}
+.pname{flex:1;min-width:0}
+.pname b{display:block;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pname small{font-size:10.5px;color:var(--muted)}
+.ovr{font-family:"Bebas Neue",Impact,sans-serif;font-size:22px;width:28px;text-align:right;font-variant-numeric:tabular-nums}
+.x{width:28px;height:28px;border-radius:50%;color:var(--muted);font-size:13px;flex:none}
+.x:hover{color:var(--text);background:var(--card2)}
+.add{flex:none;min-width:52px;padding:6px 10px;border-radius:9px;font-size:11px;font-weight:700;background:var(--card2);border:1px solid var(--line)}
+.add:not(:disabled):hover{border-color:var(--red)}
+.add.on{background:var(--red);border-color:var(--red)}
+.add:disabled{opacity:.35;cursor:default}
+.budget{display:flex;justify-content:space-between;align-items:baseline;margin:12px 0 6px;font-size:12px;color:var(--muted)}
+.budget b{font-family:"Bebas Neue",Impact,sans-serif;font-size:24px;color:var(--text);letter-spacing:.03em;font-weight:400}
+.notes{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 12px}
+.sbt{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;margin-bottom:6px}
+.sbt th{font-size:10px;color:var(--muted);font-weight:700;padding:4px 0;text-align:center}
+.sbt th:first-child,.sbt td:first-child{text-align:left}
+.sbt td{padding:8px 0;text-align:center;font-size:14px;border-top:1px solid var(--line);transition:opacity .35s}
+.sbt td.tot{font-family:"Bebas Neue",Impact,sans-serif;font-size:26px}
+.sbt tr.won td.tot{color:var(--gold)}
+.fres{transition:opacity .35s}
+.hid{opacity:0}
+.fres .banner{text-align:center;padding:10px 0 4px}
+.fres .banner .h{font-size:36px;line-height:1}
+.scorers{display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:12px;margin:12px 0}
+.scorers h5{font-size:10px;letter-spacing:.08em;color:var(--muted);margin-bottom:4px}
+.scorers div div{display:flex;justify-content:space-between;gap:6px;padding:4px 0;border-bottom:1px solid var(--line)}
+.scorers span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* EVENTS, SHOP, MISC */
+.chips{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;scrollbar-width:none}
+.chips button{flex:none;padding:7px 12px;border-radius:20px;background:var(--card);border:1px solid var(--line);font-size:11px;font-weight:700}
+.chips button.on{background:var(--text);color:var(--ink)}
+.ev{display:flex;gap:12px}
+.date{flex:none;width:48px;text-align:center;background:var(--card2);border-radius:12px;padding:6px 0;height:fit-content}
+.date small{font-size:9px;color:var(--red2);font-weight:800;text-transform:uppercase;display:block}
+.date .h{font-size:26px;line-height:1}
+.ev h4{font-size:14px;margin-bottom:2px}
+.ev .loc{font-size:11px;color:var(--muted);margin-bottom:6px}
+.ev p{font-size:12px;color:#d0d0d8;margin-bottom:8px}
+.tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.prod{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.prod .img{height:100px;display:grid;place-items:center;font-size:40px;background:linear-gradient(135deg,#2a0711,#141419)}
+.prod div.b{padding:9px}
+.prod b{font-size:12px;display:block;min-height:30px}
+.prod s{color:var(--muted);font-size:11px;margin-right:4px}
+canvas{width:100%;border-radius:16px;display:block;margin-bottom:10px;background:#111}
+.frames{display:flex;gap:6px;margin-bottom:10px}
+.frames button{flex:1;padding:8px;border-radius:10px;border:2px solid var(--line);font-size:11px;font-weight:700;background:var(--card2)}
+.frames button.on{border-color:var(--red)}
+.memory{border-left:3px solid var(--red);padding:4px 0 4px 10px;margin-bottom:10px;font-size:12px}
+.memory b{display:block;font-size:10px;color:var(--muted);margin-top:3px;font-weight:600}
+textarea,input[type=text]{width:100%;background:var(--card2);border:1px solid var(--line);border-radius:10px;color:var(--text);font:inherit;font-size:12px;padding:9px;resize:none}
+textarea:focus,input:focus{outline:2px solid var(--red)}
+.chal{display:flex;gap:12px;align-items:center}
+.chal .ic{width:40px;height:40px;border-radius:12px;background:rgba(206,17,65,.15);color:var(--red2);display:grid;place-items:center;flex:none}
+.chal .tx{flex:1}
+.chal b{font-size:13px}
+.chal p{font-size:11px;color:var(--muted);margin:2px 0 6px}
+.bar.thin{height:5px}
+
+/* TOAST + SHEET */
+.toast{position:absolute;top:46px;left:10px;right:10px;background:rgba(40,40,48,.94);backdrop-filter:blur(14px);border-radius:18px;padding:11px 13px;display:flex;gap:10px;z-index:60;
+  transform:translateY(-150%);transition:transform .45s cubic-bezier(.2,.9,.3,1.2);box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.toast.show{transform:none}
+.toast .ic{width:36px;height:36px;border-radius:9px;background:var(--red);display:grid;place-items:center;flex:none;font-size:18px}
+.toast b{font-size:13px;display:block}
+.toast span{font-size:12px;color:#d6d6de}
+.toast small{font-size:10px;color:var(--muted);margin-left:auto;align-self:flex-start}
+.sheet{position:absolute;inset:0;background:rgba(0,0,0,.6);z-index:70;display:none;align-items:flex-end}
+.sheet.open{display:flex}
+.sheet > div{background:var(--card);width:100%;border-radius:24px 24px 0 0;padding:20px 16px 30px;max-height:80%;overflow-y:auto}
+.persona{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.persona button{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:14px 10px;text-align:left;font-size:12px}
+.persona button b{display:block;font-size:14px;margin:4px 0 2px}
+.persona button em{font-style:normal;font-size:22px}
+.note{padding:10px 0;border-bottom:1px solid var(--line);font-size:12px}
+.note b{display:block;font-size:13px}
+.float{position:absolute;left:50%;top:40%;transform:translateX(-50%);font-family:"Bebas Neue";font-size:36px;color:var(--gold);pointer-events:none;z-index:80;animation:up 1.4s forwards;text-shadow:0 0 20px rgba(245,197,66,.6)}
+@keyframes up{to{transform:translate(-50%,-90px);opacity:0}}
+.classic .boost{display:none!important}
+.classic-only{display:none}
+.classic .classic-only{display:block}
+
+/* SIDE PANEL */
+.side{width:380px;max-width:100%}
+.side h1{font-family:"Bebas Neue";font-size:44px;line-height:.95;letter-spacing:.03em;font-weight:400}
+.side h1 span{color:var(--red2)}
+.side .lede{color:var(--muted);font-size:13px;margin:8px 0 20px;line-height:1.5}
+.pcol{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px}
+.pcol h2{font-size:12px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+.pcol ul{list-style:none;font-size:13px;line-height:1.45}
+.pcol li{padding:5px 0 5px 18px;position:relative;color:#d6d6de}
+.pcol li::before{content:"";position:absolute;left:0;top:11px;width:8px;height:8px;border-radius:2px;background:var(--red)}
+.pcol.ret li::before{background:var(--silver)}
+.demo{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+@media (max-width:480px){
+  .wrap{padding:0;gap:16px}
+  .phone{width:100%;height:100vh;height:100dvh;border-radius:0;border:none;box-shadow:none}
+  .notch{display:none}
+  .side{padding:0 16px 32px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="phone" id="phone">
+    <div class="notch"></div>
+    <div class="status"><span id="clock">9:41</span><span>●●● 5G ▮</span></div>
+    <main id="main"></main>
+    <nav class="tabs" id="tabs"></nav>
+    <div class="toast" id="toast"><div class="ic">🚀</div><div><b id="tTitle"></b><span id="tBody"></span></div><small>now</small></div>
+    <div class="sheet" id="sheet"><div id="sheetBody"></div></div>
+  </div>
+
+  <aside class="side">
+    <h1>THE CITY IS <span>CALLING.</span></h1>
+    <p class="lede">A fan experience that moves with Houston: scan, earn, unlock, repeat. Younger fans get play, progress and real-world events. Longtime fans keep the game-day app they already know.</p>
+    <div class="pcol"><h2 style="color:var(--red2)">Attract younger fans</h2><ul>
+      <li>Scan QR codes at event stations for points and climb 5 tiers, Rookie to Hall of Fame</li>
+      <li>Your rocket climbs with your points and gets a new upgrade with each win</li>
+      <li>Fantasy: build a $20 starting 5 from every era of Rockets history, plus game predictions</li>
+      <li>Challenges, badges and a Houston leaderboard</li>
+      <li>Youth & college events: AI literacy, 3v3, H.O.R.S.E., skills challenges, pop-ups</li>
+    </ul></div>
+    <div class="pcol ret"><h2 style="color:var(--silver)">Keep longtime fans</h2><ul>
+      <li>Classic view: one toggle hides the game layer, leaving tickets, events and shop</li>
+      <li>Losses still earn points, so loyalty is rewarded, not just winning streaks</li>
+      <li>Legacy Wall and Fan Family link longtime fans with new ones</li>
+    </ul></div>
+    <div class="pcol"><h2>Demo controls</h2>
+      <div class="demo">
+        <button class="btn" id="simBtn">▶ Sim next game</button>
+        <button class="btn" id="scanBtn">Simulate QR scan</button>
+        <button class="btn ghost" id="pushBtn">Send test push</button>
+        <button class="btn ghost" id="resetBtn">Reset demo</button>
+      </div>
+      <p class="muted" style="margin-top:10px">Student concept for the NBA Foundation Tech Challenge. Not an official team product; all games, events, prices and fans shown are sample data.</p>
+    </div>
+  </aside>
+</div>
+
+<script>
+/* ---------- ICONS ---------- */
+const ICONS={
+ home:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+ ticket:'<path d="M4 6h16v4a2 2 0 0 0 0 4v4H4v-4a2 2 0 0 0 0-4z"/><path d="M14 6v12" stroke-dasharray="2 2.4"/>',
+ star:'<path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3l-5.6 2.9 1.1-6.2L3 9.6l6.2-.9z"/>',
+ target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/>',
+ bag:'<path d="M5 8h14l-1 13H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
+ user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/>',
+ qr:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v1M14 20h1M18 18h3v3"/>',
+ gift:'<rect x="3" y="9" width="18" height="12" rx="1"/><path d="M3 13h18M12 9v12M12 9c-2-4-6-4-4.5-1 .5 1 4.5 1 4.5 1s4 0 4.5-1C18 5 14 5 12 9"/>',
+ flag:'<path d="M5 21V4h12l-2.5 4 2.5 4H5"/>',
+ trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H4.5a3 3 0 0 0 3.5 4M16 6h3.5a3 3 0 0 1-3.5 4M12 13v4M8 21h8M10 17h4v4h-4"/>',
+ calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M7 14h2M11 14h2M15 14h2M7 17h2M11 17h2"/>',
+ camera:'<path d="M4 8h3l2-3h6l2 3h3v12H4z"/><circle cx="12" cy="13" r="4"/>',
+ users:'<circle cx="9" cy="8" r="3.5"/><path d="M2 20c.8-3.5 3.5-5 7-5s6.2 1.5 7 5"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14c2.5 0 4.3 1.3 5 4"/>',
+ toggle:'<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="8" cy="12" r="3"/>',
+ bell:'<path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4zM10 20a2 2 0 0 0 4 0"/>',
+ chev:'<path d="M9 6l6 6-6 6"/>',
+ back:'<path d="M15 6l-6 6 6 6"/>',
+ flashlight:'<path d="M8 3h8l-1.5 6v12h-5V9z"/><path d="M12 13v2"/>',
+ lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+ check:'<path d="M5 12.5l4.5 4.5L19 7"/>',
+ crown:'<path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z"/>',
+ badge:'<path d="M12 3l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V6z"/><path d="M12 9l1.2 2.4 2.6.4-1.9 1.8.5 2.6-2.4-1.3-2.4 1.3.5-2.6-1.9-1.8 2.6-.4z"/>',
+ cart:'<circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M3 4h2.5l2.3 11h11l2-8H6.5"/>',
+ jersey:'<path d="M8 3h8l1 2.5L20.5 7v4.5L18 12v9H6v-9l-2.5-.5V7L7 5.5z"/><path d="M9.5 3.2a2.5 2.5 0 0 0 5 0"/>'
+};
+const ic=(n,s=20)=>`<svg class="i" viewBox="0 0 24 24" style="width:${s}px;height:${s}px">${ICONS[n]}</svg>`;
+
+/* original brand mark: rocket with orbit ring (not the team logo) */
+const mark=(s=48,c='#CE1141')=>`<svg viewBox="0 0 60 60" style="width:${s}px;height:${s}px">
+ <ellipse cx="30" cy="34" rx="26" ry="9" fill="none" stroke="${c}" stroke-width="2.5" transform="rotate(-18 30 34)" opacity=".9"/>
+ <path d="M30 4c8 8 9 22 7 34H23c-2-12-1-26 7-34z" fill="${c}"/>
+ <path d="M23 31l-6 11 6-2zM37 31l6 11-6-2z" fill="${c}"/>
+ <circle cx="30" cy="20" r="4" fill="#0a0a0d"/>
+ <path d="M26 40q4 12 8 0z" fill="#ffb02e"/></svg>`;
+const mini=(x,y,sz,c)=>`<g transform="translate(${x-sz/2} ${y-sz/2}) scale(${sz/60})"><path d="M30 4c8 8 9 22 7 34H23c-2-12-1-26 7-34z" fill="${c}"/><path d="M23 31l-6 11 6-2zM37 31l6 11-6-2z" fill="${c}"/><circle cx="30" cy="20" r="4" fill="#0a0a0d"/></g>`;
+
+/* ---------- DATA ---------- */
+const TIERS=[
+ {n:'Rookie',min:0,tag:'Just getting started.',c:'#c4ced4',un:['Welcome badge','Starter points','Access to basic challenges']},
+ {n:'Starter',min:100,tag:'Becoming an active fan.',c:'#e0314f',un:['Exclusive digital badge','Bonus points','Small Rockets prizes']},
+ {n:'All-Star',min:250,tag:'Completing more challenges.',c:'#ff2d55',un:['Exclusive merchandise drawings','Bonus challenges','Special event perks']},
+ {n:'MVP',min:500,tag:'A highly engaged fan.',c:'#f5c542',un:['Premium Rockets rewards','Priority access to select events','Exclusive digital content']},
+ {n:'Hall of Fame',min:1000,tag:'The ultimate Rockets fan.',c:'#f5c542',un:['Special recognition','Exclusive fan experiences','Limited-edition rewards (when available)']}];
+const PARTS=[{w:1,n:'Red fins'},{w:2,n:'Porthole glow'},{w:3,n:'Twin boosters'},{w:5,n:'Chrome nose'},{w:7,n:'Racing stripes'},{w:9,n:'Star decals'},{w:12,n:'Afterburner'}];
+const OPP=[['DAL','Dallas'],['SAS','San Antonio'],['MEM','Memphis'],['DEN','Denver'],['PHX','Phoenix'],['GSW','Golden State'],['OKC','Oklahoma City'],['NOP','New Orleans'],['LAL','Los Angeles'],['BOS','Boston'],['MIA','Miami'],['MIN','Minnesota']];
+const DATES=['Tonight · 7:00 PM','Fri Oct 30 · 7:00 PM','Sun Nov 1 · 6:00 PM','Wed Nov 4 · 7:00 PM','Sat Nov 7 · 7:30 PM','Mon Nov 9 · 7:00 PM'];
+const REWARDS=[
+ {id:'stk',n:'Rockets Sticker Pack',c:50,t:0,e:'✨'},{id:'lan',n:'Rockets Lanyard',c:100,t:0,e:'🎗️'},
+ {id:'bag',n:'Rockets Drawstring Bag',c:150,t:1,e:'🎒'},{id:'mer',n:'Rockets Merch Pack',c:200,t:1,e:'👕'},
+ {id:'drw',n:'Exclusive Merch Drawing Entry',c:250,t:2,e:'🎟️'},{id:'vip',n:'VIP Event Access',c:500,t:3,e:'⭐'},
+ {id:'crt',n:'Courtside Fan Experience',c:1000,t:4,e:'🏆'}];
+const BADGES=[
+ {id:'first',n:'First Scan',e:'📲'},{id:'team',n:'Team Player',e:'👥'},{id:'shooter',n:'Top Shooter',e:'🏀'},
+ {id:'oracle',n:'Oracle',e:'🔮'},{id:'story',n:'Storyteller',e:'📜'},{id:'mvp',n:'MVP',e:'🏆'}];
+const CHAL=[
+ {id:'scan3',n:'Station Hopper',d:'Scan QR codes at 3 event stations',g:3,v:()=>S.scans,r:25,t:0,i:'qr'},
+ {id:'rsvp2',n:'Plan Ahead',d:'RSVP to 2 community events',g:2,v:()=>Object.keys(S.rsvp).length,r:15,t:0,i:'calendar'},
+ {id:'pred1',n:'Call It',d:'Get picks scored for one game',g:1,v:()=>S.predHist.length,r:10,t:0,i:'target'},
+ {id:'share',n:'Say Cheese',d:'Save a Photo Booth picture',g:1,v:()=>S.shared?1:0,r:10,t:0,i:'camera'},
+ {id:'legacy',n:'Tell Your Story',d:'Post a memory to the Legacy Wall',g:1,v:()=>S.memories.length,r:10,t:0,i:'users'},
+ {id:'wins3',n:'Ride the Wave',d:'Follow along for 3 wins',g:3,v:()=>S.wins,r:20,t:0,i:'trophy'},
+ {id:'perfect',n:'Perfect Call',d:'Get 3/3 picks right in one game',g:1,v:()=>S.predHist.some(h=>h.correct===3)?1:0,r:40,t:2,i:'star'},
+ {id:'squadnight',n:'Squad Night',d:'Check in at a game with your linked fan',g:1,v:()=>S.squadGames,r:40,t:2,i:'users'}];
+const EVENTS=[
+ {id:'phone',m:'Pop-up',d:'Live',t:'"The City Is Calling" red phone booth',loc:'Moves around the city: follow the clues',aud:['youth','college','longtime','family'],p:'Answer the ringing booth (or scan a QR code around town) to get a secret code. Enter it below for bonus points.'},
+ {id:'horse',m:'Nov',d:'7',t:'H.O.R.S.E. Challenge',loc:'Emancipation Park · Third Ward · 11 AM',aud:['youth','family','college'],p:'Bracket-style H.O.R.S.E. on outdoor courts. Finalists shoot at halftime.'},
+ {id:'ai',m:'Nov',d:'10',t:'AI Literacy Lab: Build a Shot Predictor',loc:'Central Library · Downtown · 4 PM',aud:['youth','college'],p:'Teens train a simple model on shot data, then test its picks on a real hoop.'},
+ {id:'skills',m:'Nov',d:'14',t:'Skills Challenge',loc:'Discovery Green · 10 AM',aud:['youth','family'],p:'Four stations: Hot Shot, Dribble Dash, Clutch Time, Free Throw. Scan at each one.'},
+ {id:'3v3',m:'Nov',d:'15',t:'Clutch City 3v3 Tournament',loc:'University campus courts · 9 AM',aud:['college'],p:'Campus-vs-campus 3v3. Winning squad gets a pregame shootaround.'},
+ {id:'fest',m:'Nov',d:'21',t:'Fan Fest',loc:'Arena plaza · 2 PM',aud:['family','longtime','youth','college'],p:'DJ, alumni meet & greet, and cross-generation trivia: legends questions vs. new-era questions.'},
+ {id:'3pt',m:'Nov',d:'22',t:'3-Point Shootout + Dunk Contest',loc:'Midtown Park · 6 PM',aud:['college','youth'],p:'Night run under the lights. Fans vote on dunks in the app.'},
+ {id:'popup',m:'Nov',d:'28',t:'Youth-Designed Pop-Up',loc:'EaDo · 12 PM',aud:['youth','college'],p:'Local students co-design the space: art, music and a limited merch drop.'},
+ {id:'tail',m:'Dec',d:'5',t:'Rivalry Tailgate',loc:'Arena lots · 4 PM',aud:['longtime','family','college'],p:'Grills, games and a cornhole bracket before tip-off.'}];
+const AUD={all:'All',youth:'Youth',college:'College',longtime:'Longtime fans',family:'Family'};
+const PERSONAS=[{k:'youth',e:'🧒',n:'Youth',d:'Under 18'},{k:'college',e:'🎓',n:'College',d:'Students in Houston'},{k:'longtime',e:'🏆',n:'Longtime fan',d:'Been here through it all'},{k:'family',e:'👨‍👩‍👧',n:'Family',d:'Bringing the crew'}];
+const SHOP=[
+ {n:'Clutch City Tee',p:35,e:'👕'},{n:'Red Nation Hoodie',p:65,e:'🧥'},{n:'Launch Pad Snapback',p:30,e:'🧢'},
+ {n:'Youth Pop-Up Collab Tee',p:40,e:'🎨',tag:'Designed by Houston students'},{n:'Rally Towel',p:12,e:'🧣'},{n:'Mini Hoop Set',p:28,e:'🏀'}];
+
+/* ---------- FANTASY: ALL-TIME ROCKETS PLAYER VAULT ----------
+   name | position | Rockets era | rating (estimate of their Rockets years)
+   price: $5 = 93+, $4 = 86–92, $3 = 80–85, $2 = 74–79, $1 = 73 and under */
+const PLAYERS_RAW=`Hakeem Olajuwon|C|’80s–’00s|99
+James Harden|G|’10s–’20s|97
+Moses Malone|C|’70s–’80s|96
+Tracy McGrady|G/F|’00s|95
+Yao Ming|C|’00s–’10s|94
+Kevin Durant|F|’20s|94
+Elvin Hayes|F/C|’60s–’80s|94
+Clyde Drexler|G|’90s|92
+Chris Paul|G|’10s|91
+Charles Barkley|F|’90s|90
+Russell Westbrook|G|’10s–’20s|89
+Ralph Sampson|C|’80s|89
+Alperen Şengün|C|’20s|89
+Calvin Murphy|G|’70s–’80s|88
+Rudy Tomjanovich|F|’70s–’80s|88
+Steve Francis|G|’90s–’00s|88
+Dwight Howard|C|’10s|88
+Scottie Pippen|F|’90s|86
+Otis Thorpe|F/C|’80s–’90s|86
+Rick Barry|F|’70s–’80s|85
+Amen Thompson|G/F|’20s|85
+Fred VanVleet|G|’20s|84
+Jalen Green|G|’20s|83
+Kevin Martin|G|’10s|83
+Eric Gordon|G|’10s–’20s|83
+Clint Capela|C|’10s–’20s|83
+Jabari Smith Jr.|F|’20s|82
+Robert Horry|F|’90s|82
+Kenny Smith|G|’90s|82
+Cuttino Mobley|G|’90s–’00s|82
+Luis Scola|F/C|’00s–’10s|82
+Kyle Lowry|G|’00s–’10s|82
+Christian Wood|F/C|’20s|82
+Sam Cassell|G|’90s|81
+Vernon Maxwell|G|’90s|81
+Shane Battier|F|’00s–’10s|81
+Trevor Ariza|F|’00s–’10s|81
+Jeremy Lin|G|’10s|81
+Ron Artest|F|’00s|81
+Mario Elie|G/F|’90s|80
+Mike Newlin|G|’70s|80
+John Lucas|G|’70s–’80s|80
+Robert Reid|F|’70s–’80s|80
+Rodney McCray|F|’80s|80
+Sleepy Floyd|G|’80s–’90s|80
+Dikembe Mutombo|C|’00s|80
+Chandler Parsons|F|’10s|80
+Aaron Brooks|G|’00s–’10s|80
+Lou Williams|G|’10s|80
+John Wall|G|’20s|80
+Tari Eason|F|’20s|79
+Dillon Brooks|F|’20s|79
+Kevin Porter Jr.|G|’20s|79
+Goran Dragić|G|’10s|79
+P.J. Tucker|F|’10s–’20s|79
+Rafer Alston|G|’00s|79
+Patrick Beverley|G|’10s|78
+Omer Asik|C|’10s|78
+Lewis Lloyd|G|’80s|78
+Victor Oladipo|G|’20s|78
+Allen Leavell|G|’70s–’80s|77
+Terrence Jones|F|’10s|77
+Carl Landry|F|’00s–’10s|77
+Glen Rice|F|’00s|77
+Kevin Willis|F/C|’90s–’00s|77
+Purvis Short|F|’80s|77
+Don Kojis|F|’60s–’70s|77
+Steven Adams|C|’20s|77
+Ryan Anderson|F|’10s|77
+Buck Johnson|F|’80s–’90s|76
+Juwan Howard|F|’00s|76
+Maurice Taylor|F|’00s|76
+Walt Williams|F|’90s–’00s|76
+Joe Barry Carroll|C|’80s|76
+Stu Lantz|G|’60s–’70s|76
+Jack Marin|F|’70s|76
+Courtney Lee|G|’10s|76
+Josh Smith|F|’10s|76
+Robert Covington|F|’10s–’20s|76
+Dorian Finney-Smith|F|’20s|76
+Bob Sura|G|’00s|75
+David Wesley|G|’00s|75
+Eddie Griffin|F|’00s|75
+Kenny Thomas|F|’90s–’00s|75
+Mitchell Wiggins|G|’80s–’90s|75
+John Block|F|’60s–’70s|75
+Gerald Green|G|’10s|75
+Danuel House|F|’10s–’20s|75
+Jae'Sean Tate|F|’20s|75
+Nenê|C|’10s|75
+Reed Sheppard|G|’20s|75
+Michael Dickerson|G|’90s|75
+Chuck Hayes|F/C|’00s–’10s|74
+Kelvin Cato|C|’90s–’00s|74
+Matt Maloney|G|’90s|74
+Mike Woodson|G|’80s–’90s|74
+Billy Paultz|C|’80s|74
+Tom Henderson|G|’70s–’80s|74
+Dwight Jones|F/C|’70s|74
+Kevin Kunnert|C|’70s|74
+Mike Dunleavy|G|’70s–’80s|74
+Caldwell Jones|C|’80s|74
+Eddie Johnson|G/F|’90s|74
+Austin Rivers|G|’10s–’20s|74
+Kenyon Martin Jr.|F|’20s|74
+Cam Whitmore|F|’20s|74
+Marcus Camby|C|’10s|74
+Kenneth Faried|F|’10s|74
+Shandon Anderson|F|’90s–’00s|74
+Stromile Swift|F|’00s|73
+Luther Head|G|’00s|73
+Carl Herrera|F|’90s|73
+Matt Bullard|F|’90s–’00s|73
+Jordan Hill|F|’10s|73
+Corey Brewer|F|’10s|73
+Montrezl Harrell|F/C|’10s|73
+DeMarcus Cousins|C|’20s|73
+Major Jones|F|’70s–’80s|72
+Chucky Brown|F|’90s|72
+Pete Chilcutt|F/C|’90s|72
+Scott Brooks|G|’90s|72
+Larry Smith|F/C|’80s–’90s|72
+Jim Petersen|F/C|’80s|72
+Moochie Norris|G|’90s–’00s|72
+Jon Barry|G|’00s|72
+Brent Barry|G|’00s|72
+Von Wafer|G|’00s|72
+Ben McLemore|G|’10s–’20s|72
+Jason Terry|G|’10s|72
+Jeff Green|F|’20s|72
+Lionel Hollins|G|’80s|71
+Art Williams|G|’60s–’70s|71
+Aaron Holiday|G|’20s|71
+Pat Riley|G|’60s–’70s|70
+Toby Kimball|F/C|’60s–’70s|70
+Wally Walker|F|’80s|70
+Jock Landale|C|’20s|70
+Isaiah Hartenstein|C|’10s|70
+Steve Novak|F|’00s|70`;
+const PLAYERS=PLAYERS_RAW.split('\n').map((l,i)=>{const[n,pos,era,o]=l.split('|');const r=+o;return{id:i,n,pos,era,r,c:r>=93?5:r>=86?4:r>=80?3:r>=74?2:1}});
+const BUDGET=20,OPP_BUDGET=25,TIER_W={5:46,4:30,3:14,2:7,1:3};
+const isG=p=>p.pos.includes('G'),isF=p=>p.pos.includes('F'),isC=p=>p.pos.includes('C');
+function balance(ps){const g=ps.some(isG),f=ps.some(isF),c=ps.some(isC);let b=0,notes=[];
+  if(g&&f&&c){b=2;notes.push(['green','Balanced lineup +2'])}
+  if(!g){b-=3;notes.push(['red','No guard −3'])}
+  if(!c){b-=3;notes.push(['red','No big man −3'])}
+  return{b,notes}}
+const teamStr=ps=>ps.reduce((a,p)=>a+p.r,0)/ps.length+balance(ps).b;
+/* the Vault draws a boosted five: $25 budget, weighted toward $5 and $4 players, makes sure it has a guard and a big */
+function genOpp(ex=[]){const picks=[];let budget=OPP_BUDGET;
+  while(picks.length<5){const left=5-picks.length,max=budget-(left-1);
+    const needG=left<=2&&!picks.some(isG),needC=left<=2&&!picks.some(isC);
+    const ok=p=>!picks.includes(p)&&!ex.includes(p.id)&&p.c<=max&&(!(left===1&&needG)||isG(p))&&(!(left===1&&needC&&!needG)||isC(p));
+    const tiers=[1,2,3,4,5].filter(t=>PLAYERS.some(p=>p.c===t&&ok(p)));
+    const tw=tiers.map(t=>TIER_W[t]);let t=tw.reduce((a,b)=>a+b,0)*Math.random(),k=0;while(t>tw[k]){t-=tw[k];k++}
+    let cand=PLAYERS.filter(p=>p.c===tiers[Math.min(k,tiers.length-1)]&&ok(p));
+    if((needG||needC)&&left===2){const pref=cand.filter(p=>(needG&&isG(p))||(needC&&isC(p)));if(pref.length&&Math.random()<.7)cand=pref}
+    const p=cand[Math.floor(Math.random()*cand.length)];picks.push(p);budget-=p.c}
+  return picks}
+const gauss=()=>{let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)};
+function simGame5(a,b){const sa=teamStr(a),sb=teamStr(b),q=[[],[]];
+  for(let i=0;i<4;i++){q[0].push(Math.round(26.5+(sa-85)*0.45+gauss()*3.6));q[1].push(Math.round(26.5+(sb-85)*0.45+gauss()*3.6))}
+  let ta=q[0].reduce((x,y)=>x+y),tb=q[1].reduce((x,y)=>x+y),ot=0;
+  while(ta===tb){ot++;const x=Math.round(11+(sa-85)*0.2+gauss()*2.5),y=Math.round(11+(sb-85)*0.2+gauss()*2.5);q[0].push(x);q[1].push(y);ta+=x;tb+=y}
+  return{q,ta,tb,ot}}
+function boxScore(ps,total){const w=ps.map(p=>Math.pow(p.r,4)*(0.7+Math.random()*0.6)),sw=w.reduce((a,b)=>a+b,0);
+  const rows=ps.map((p,i)=>({id:p.id,pts:Math.round(total*w[i]/sw)})).sort((a,b)=>b.pts-a.pts);
+  rows[0].pts+=total-rows.reduce((a,r)=>a+r.pts,0);return rows}
+
+const fresh=()=>({pts:0,spent:0,wins:0,losses:0,games:[],next:0,scans:0,rsvp:{},checked:{},redeemed:[],pred:{},predHist:[],persona:null,classic:false,
+  notes:[],unread:0,squad:false,squadGames:0,arena:-1,codes:[],memories:[],shared:false,filter:'all',tab:'home',page:null,arg:null,rseg:'overview',frame:0,badges:[],claimed:[],cart:0,last:null,
+  fseg:'sim',fant:{picks:[],opp:null,game:null,w:0,l:0,streak:0,best:0,tier:0,pos:'all',q:''}});
+let S;
+try{S=Object.assign(fresh(),JSON.parse(localStorage.getItem('ccxp2'))||{})}catch(e){S=fresh()}
+const save=()=>{try{localStorage.setItem('ccxp2',JSON.stringify(S))}catch(e){}};
+const $=id=>document.getElementById(id);
+const tierIdx=p=>{let i=0;TIERS.forEach((t,k)=>{if(p>=t.min)i=k});return i};
+const avail=()=>S.pts-S.spent;
+const nextOpp=()=>OPP[S.next%OPP.length];
+const partsOn=()=>PARTS.filter(p=>S.wins>=p.w).length;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const user=()=>'RocketsFan123';
+const avatar=(s=44)=>`<div class="avatar" style="width:${s}px;height:${s}px"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M2 24c1-6 5-9 10-9s9 3 10 9z"/></svg></div>`;
+
+/* ---------- TIER BADGE ART ---------- */
+let gid=0;
+function starPts(cx,cy,R,r){let p=[];for(let k=0;k<10;k++){const a=-Math.PI/2+k*Math.PI/5,rad=k%2?r:R;p.push((cx+rad*Math.cos(a)).toFixed(1)+','+(cy+rad*Math.sin(a)).toFixed(1))}return p.join(' ')}
+function tierBadge(i,s=64){
+  const g='g'+(gid++);
+  const hex='50,6 89,28 89,72 50,94 11,72 11,28',hexIn='50,16 80,33 80,67 50,84 20,67 20,33';
+  const shield='M50 22 L82 31 V55 C82 75 66 87 50 95 C34 87 18 75 18 55 V31Z',shieldIn='M50 30 L74 37 V56 C74 71 62 80 50 86 C38 80 26 71 26 56 V37Z';
+  const crown='<path d="M33 25 L36 9 L43 17 L50 5 L57 17 L64 9 L67 25Z" fill="url(#'+g+')" stroke="#7a5a10" stroke-width="1"/>';
+  let laurel='';
+  if(i===4){for(let k=0;k<6;k++){const y=40+k*9,x=10+k*1.5;laurel+=`<ellipse cx="${x}" cy="${y}" rx="7" ry="3.2" fill="url(#${g})" transform="rotate(${-50+k*12} ${x} ${y})"/><ellipse cx="${100-x}" cy="${y}" rx="7" ry="3.2" fill="url(#${g})" transform="rotate(${50-k*12} ${100-x} ${y})"/>`}}
+  const grads=[['#f2f4f6','#7c868f'],['#f0b46a','#8a4f17'],['#ff5c78','#7a0a20'],['#ffe28a','#a8770f'],['#ffe28a','#a8770f']][i];
+  const defs=`<defs><linearGradient id="${g}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${grads[0]}"/><stop offset="1" stop-color="${grads[1]}"/></linearGradient></defs>`;
+  let body;
+  if(i===0)body=`<polygon points="${hex}" fill="url(#${g})"/><polygon points="${hexIn}" fill="#1b1d22"/><polygon points="${starPts(50,51,22,9)}" fill="url(#${g})"/>`;
+  else if(i===1)body=`<polygon points="${hex}" fill="url(#${g})"/><polygon points="${hexIn}" fill="#1b1d22"/>${mini(50,50,38,'#CE1141')}`;
+  else if(i===2)body=`<polygon points="${starPts(50,54,46,20)}" fill="url(#${g})" stroke="#c4ced4" stroke-width="2"/><polygon points="${starPts(50,54,32,14)}" fill="#1b1d22"/>${mini(50,55,28,'#ff2d55')}`;
+  else body=`${laurel}<path d="${shield}" fill="url(#${g})"/><path d="${shieldIn}" fill="#1b1d22"/>${crown}${mini(50,58,32,'#CE1141')}`;
+  return `<svg viewBox="0 0 100 100" style="width:${s}px;height:${s}px;flex:none;filter:drop-shadow(0 4px 10px rgba(0,0,0,.6))">${defs}${body}</svg>`;
+}
+
+/* ---------- ROCKET ---------- */
+function rocketSVG(n,flame){
+  const has=k=>n>=k;
+  return `<svg viewBox="0 0 120 230" xmlns="http://www.w3.org/2000/svg">
+  <defs><linearGradient id="bd" x1="0" x2="1"><stop offset="0" stop-color="#d9dde2"/><stop offset=".5" stop-color="#fff"/><stop offset="1" stop-color="#aab3bb"/></linearGradient>
+  <linearGradient id="ch" x1="0" x2="1"><stop offset="0" stop-color="#8a96a0"/><stop offset=".45" stop-color="#f4f7fa"/><stop offset="1" stop-color="#6c7780"/></linearGradient>
+  <linearGradient id="fl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6c2"/><stop offset=".4" stop-color="#ffb02e"/><stop offset="1" stop-color="#CE1141" stop-opacity="0"/></linearGradient></defs>
+  ${flame?`<path d="M44 170 Q60 ${has(7)?235:212} 76 170 Z" fill="url(#fl)"><animate attributeName="d" dur=".18s" repeatCount="indefinite" values="M44 170 Q60 ${has(7)?235:212} 76 170 Z;M46 170 Q60 ${has(7)?222:200} 74 170 Z;M44 170 Q60 ${has(7)?235:212} 76 170 Z"/></path>`:''}
+  ${has(3)?`<g><rect x="20" y="105" width="14" height="55" rx="7" fill="url(#bd)"/><path d="M20 112 Q27 88 34 112Z" fill="#CE1141"/><rect x="86" y="105" width="14" height="55" rx="7" fill="url(#bd)"/><path d="M86 112 Q93 88 100 112Z" fill="#CE1141"/>${flame?'<path d="M22 160 Q27 185 32 160Z M88 160 Q93 185 98 160Z" fill="url(#fl)"/>':''}</g>`:''}
+  <path d="M40 165 L30 ${has(1)?195:178} L42 ${has(1)?178:170}Z" fill="${has(1)?'#CE1141':'#7d8790'}"/>
+  <path d="M80 165 L90 ${has(1)?195:178} L78 ${has(1)?178:170}Z" fill="${has(1)?'#CE1141':'#7d8790'}"/>
+  <path d="M60 18 C82 45 84 100 80 172 L40 172 C36 100 38 45 60 18Z" fill="url(#bd)" stroke="#5c646c" stroke-width="1.5"/>
+  <path d="M60 18 C70 30 76 44 78 58 L42 58 C44 44 50 30 60 18Z" fill="${has(4)?'url(#ch)':'#CE1141'}"/>
+  ${has(5)?'<path d="M50 60 L50 170 M70 60 L70 170" stroke="#CE1141" stroke-width="5"/>':''}
+  <circle cx="60" cy="88" r="12" fill="#1a2a3a" stroke="#5c646c" stroke-width="3"/>
+  ${has(2)?'<circle cx="60" cy="88" r="9" fill="#ffd25e"><animate attributeName="opacity" values="1;.6;1" dur="1.6s" repeatCount="indefinite"/></circle>':'<circle cx="57" cy="85" r="3" fill="#8fb3d0"/>'}
+  ${has(6)?'<path d="M60 120 l3 7 7 .5 -5.5 4.5 2 7 -6.5 -4 -6.5 4 2 -7 -5.5 -4.5 7 -.5Z" fill="#f5c542"/><path d="M60 145 l2 4.5 4.5 .3 -3.5 3 1.3 4.5 -4.3 -2.6 -4.3 2.6 1.3 -4.5 -3.5 -3 4.5 -.3Z" fill="#f5c542"/>':''}
+  <rect x="42" y="168" width="36" height="6" rx="2" fill="#4a525a"/>
+  <text x="60" y="113" font-family="Bebas Neue" font-size="11" fill="#CE1141" text-anchor="middle">H-TOWN</text></svg>`;
+}
+const skyline=`<svg viewBox="0 0 360 70" preserveAspectRatio="none" style="width:100%;height:60px;display:block"><path fill="#050508" d="M0 70V52h14v-8h10v10h12V34h8v-6h6v6h6v20h10V40h12v-14h6v14h8v14h10V22l8-6 8 6v32h10V44h14v-18h4v-4h4v4h4v18h8v10h12V30h10v-8h6v8h10v24h10V46h14v8h10V18h4l4-8 4 8h4v36h12V38h10v16h12V44h12v26z"/><rect y="64" width="360" height="6" fill="#2a0712"/></svg>`;
+function qrSVG(){
+  let seed=11;const r=()=>{seed=(seed*9301+49297)%233280;return seed/233280};
+  const N=21,fp=(x,y)=>(x<8&&y<8)||(x>12&&y<8)||(x<8&&y>12);let s='';
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++)if(!fp(x,y)&&r()>.52)s+=`<rect x="${x}" y="${y}" width="1" height="1"/>`;
+  const f=(x,y)=>`<rect x="${x}" y="${y}" width="7" height="7"/><rect x="${x+1}" y="${y+1}" width="5" height="5" fill="#fff"/><rect x="${x+2}" y="${y+2}" width="3" height="3"/>`;
+  return `<svg viewBox="0 0 21 21" style="width:100%;height:100%" shape-rendering="crispEdges"><g fill="#111">${s}${f(0,0)}${f(14,0)}${f(0,14)}</g></svg>`;
+}
+
+/* ---------- HELPERS ---------- */
+let toastT;
+function push(title,body,icon='🚀'){
+  S.notes.unshift({title,body,icon,t:new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})});
+  S.notes=S.notes.slice(0,25);S.unread++;save();
+  $('tTitle').textContent=title;$('tBody').textContent=body;$('toast').querySelector('.ic').textContent=icon;
+  $('toast').classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>$('toast').classList.remove('show'),3800);
+  document.querySelectorAll('.bellct').forEach(b=>{b.style.display='grid';b.textContent=S.unread});
+}
+function floatTxt(t){const d=document.createElement('div');d.className='float';d.textContent=t;$('phone').appendChild(d);setTimeout(()=>d.remove(),1400)}
+function addPts(n){
+  const before=tierIdx(S.pts);S.pts+=n;floatTxt('+'+n+' POINTS');
+  const after=tierIdx(S.pts);
+  if(after>before){S.last&&(S.last.tierUp=after);setTimeout(()=>push('Tier up: '+TIERS[after].n+'!',`You reached ${TIERS[after].n}. New perks unlocked in Rewards.`,'🏅'),900)}
+  return after>before;
+}
+function checkBadges(){
+  const has={first:S.scans>=1,team:S.squad,shooter:!!(S.checked.skills||S.checked['3pt']),oracle:S.predHist.some(h=>h.correct===3),story:S.memories.length>0,mvp:tierIdx(S.pts)>=3};
+  BADGES.forEach(b=>{if(has[b.id]&&!S.badges.includes(b.id)){S.badges.push(b.id);setTimeout(()=>push('Badge unlocked: '+b.n,'See it in Rewards → Badges.',b.e),1800)}});
+}
+const done=k=>{checkBadges();save();render(k)};
+const bell=()=>`<button class="iconbtn" onclick="openNotes()">${ic('bell',22)}<b class="bellct" style="display:${S.unread?'grid':'none'}">${S.unread}</b></button>`;
+const topTab=t=>`<div class="topbar"><div style="width:34px">${mark(28)}</div><div class="center"><span class="h">${t}</span></div>${bell()}</div>`;
+const topBack=(t,to)=>`<div class="topbar"><button class="back" onclick="${to||'back()'}">${ic('back',20)}Back</button><div class="t" style="text-align:center;margin-right:52px">${t}</div></div>`;
+const mrow=(icon,t,sub,on,hot,extra)=>`<button class="mrow ${hot?'hot':''}" onclick="${on}"><div class="ic">${ic(icon,20)}</div><div class="tx"><b>${t}</b><span>${sub}</span></div>${extra||`<span class="chev">${ic('chev',18)}</span>`}</button>`;
+
+/* ---------- TABS ---------- */
+const TABS=[['home','Home','home'],['tickets','Tickets','ticket'],['rewards','Rewards','star',1],['fantasy','Fantasy','jersey',1],['shop','Shop','bag'],['profile','Profile','user']];
+
+function home(){
+  const ti=tierIdx(S.pts),o=nextOpp();
+  return `
+  <div class="homehero"><div class="bell">${bell()}</div>${mark(64)}<h1>CLUTCH CITY XP</h1><p>More than a game.<br>It’s a community.</p></div>
+  <div class="pad" style="margin-top:-6px">
+    <div class="card boost" style="padding:12px"><div class="prof">${avatar()}<div><b style="font-size:14px">${user()}</b><div class="muted" style="font-size:11px">${TIERS[ti].n}</div></div>
+      <div class="ptsbox"><div class="h">${S.pts}</div><small>POINTS</small></div></div></div>
+    <div class="card classic-only"><div class="row"><h3 style="margin:0">Next game</h3><span class="pill red">${DATES[0]}</span></div>
+      <div class="vs"><div class="team"><div class="h">HOU</div><small>${S.wins}-${S.losses}</small></div><div class="h" style="font-size:18px;color:var(--muted)">VS</div><div class="team"><div class="h">${o[0]}</div><small>${o[1]}</small></div></div>
+      <button class="btn full" onclick="nav('tickets')">${ic('ticket',16)} Get tickets</button></div>
+    <div class="boost">
+      ${mrow('qr','Scan Rewards','Scan QR codes at events to earn points.',"openPage('scan')",true)}
+      ${mrow('star','My Rewards','View your points, badges & rewards.',"nav('rewards')")}
+      ${mrow('flag','Challenges','Complete activities and earn more.',"openPage('challenges')")}
+      ${mrow('trophy','Leaderboard','See where you stand.',"openPage('leaderboard')")}
+    </div>
+    ${mrow('calendar','Events','H.O.R.S.E., 3v3, Fan Fest, tailgates & more.',"openPage('events')")}
+    <div class="boost">${mrow('camera','Photo Booth','Frame it, share it, earn points.',"openPage('booth')")}</div>
+    ${mrow('users','Fan Family & Legacy Wall','Link a fan. Share your story.',"openPage('family')")}
+    ${mrow('toggle','Classic View','Just tickets, events & shop. No game layer.','toggleClassic()',false,`<div class="sw ${S.classic?'on':''}"></div>`)}
+    <div class="concept">Student concept · not an official team app · sample data</div>
+  </div>`;
+}
+
+function tickets(){
+  const o=nextOpp(),checked=S.arena===S.next;
+  const up=[1,2,3,4,5].map(k=>{const op=OPP[(S.next+k)%OPP.length];return `<div class="row" style="padding:10px 0;border-bottom:1px solid var(--line)"><div><b style="font-size:13px">vs ${op[1]}</b><div class="muted" style="font-size:11px">${DATES[k]}</div></div><button class="btn sm out" onclick="push('Find seats','Seat map would open here (demo).','🎟️')">Tickets</button></div>`}).join('');
+  return `${topTab('TICKETS')}<div class="pad">
+   <div class="card" style="background:linear-gradient(135deg,#CE1141,#5a0718);border:none">
+     <div class="row"><span class="pill" style="background:rgba(0,0,0,.3);color:#fff">Next game</span><span style="font-size:11px;font-weight:600">${DATES[0]}</span></div>
+     <div class="vs"><div class="team"><div class="h">HOU</div><small style="color:#ffd0d8">${S.wins}-${S.losses}</small></div><div class="h" style="font-size:18px;opacity:.7">VS</div><div class="team"><div class="h">${o[0]}</div><small style="color:#ffd0d8">${o[1]}</small></div></div>
+     <div class="row" style="gap:8px"><button class="btn full" style="background:#fff;color:#CE1141" onclick="push('Find seats','Seat map would open here (demo).','🎟️')">Find seats</button>
+     <button class="btn full boost" style="background:rgba(0,0,0,.35)" onclick="openPage('scan',{label:'Arena entrance · vs ${o[0]}',arena:1})" ${checked?'disabled':''}>${checked?'✓ Checked in':'Arena check-in'}</button></div>
+   </div>
+   <div class="lbl">Fan offers</div>
+   ${mrow('users','Student Night · $15','Any game with a college .edu email.',"push('Student Night','Verify your .edu email to unlock $15 seats (demo).','🎓')")}
+   ${mrow('home','Family 4-Pack','4 seats + 4 hot dogs, select games.',"push('Family 4-Pack','Offer details would open here (demo).','👨‍👩‍👧')")}
+   ${mrow('crown','Season Ticket Members','Double points at every home game.',"push('Members','Member perks would open here (demo).','🏆')")}
+   <div class="lbl" style="margin-top:6px">Upcoming games</div>
+   <div class="card" style="padding:4px 14px">${up}</div>
+  </div>`;
+}
+
+function rewards(){
+  const seg=S.rseg,segs=[['overview','Overview'],['redeem','Redeem'],['badges','Badges'],['tiers','Tiers']];
+  let body='';
+  const ti=tierIdx(S.pts),nt=TIERS[ti+1];
+  if(seg==='overview'){
+    const pct=nt?((S.pts-TIERS[ti].min)/(nt.min-TIERS[ti].min))*100:100;
+    const h=Math.min(S.pts/1000,1),n=partsOn(),bottom=12+h*110;
+    const skyBg=`linear-gradient(180deg,hsl(${230+h*40},${60-h*20}%,${22-h*16}%) 0%,hsl(${350-h*100},${70-h*30}%,${40-h*32}%) 100%)`;
+    const stars=Array.from({length:36},(_,i)=>`<i style="left:${(i*37)%100}%;top:${(i*53)%90}%;opacity:${.3+((i*7)%7)/10}"></i>`).join('');
+    const nr=REWARDS.find(r=>!S.redeemed.includes(r.id));
+    body=`
+    <div class="prof" style="margin-bottom:10px">${avatar(58)}<div style="flex:1"><b style="font-size:17px">${user()}</b><div class="muted">${TIERS[ti].n}</div><div class="muted" style="margin-top:4px">${S.pts} / ${nt?nt.min:S.pts} POINTS</div></div></div>
+    <div class="bar" style="margin-bottom:16px"><div style="width:${pct}%"></div></div>
+    <div class="lbl">Current Tier</div>
+    <div class="tierrow">${tierBadge(ti,58)}<div><div class="h">${TIERS[ti].n.toUpperCase()}</div><p>${TIERS[ti].tag}</p></div></div>
+    ${nt?`<div class="lbl">Next Tier</div><div class="tierrow next">${tierBadge(ti+1,58)}<div style="flex:1"><div class="h">${nt.n.toUpperCase()}</div><p>${nt.min-S.pts} points to unlock</p></div><span style="color:var(--muted)">${ic('lock',20)}</span></div>`:''}
+    <div class="stats">
+      <div>${ic('star',22)}<span><small>Points Earned</small><b>${S.pts}</b></span></div>
+      <div>${ic('calendar',22)}<span><small>Events Completed</small><b>${Object.keys(S.checked).length}</b></span></div>
+      <div>${ic('badge',22)}<span><small>Badges Unlocked</small><b>${S.badges.length}</b></span></div>
+      <div>${ic('gift',22)}<span><small>Rewards Redeemed</small><b>${S.redeemed.length}</b></span></div>
+    </div>
+    <div class="lbl">Your Rocket</div>
+    <div class="sky" style="background:${skyBg}">
+      <div class="stars" style="opacity:${h*1.2}">${stars}</div>
+      <div class="skyline" style="transform:translateY(${h*60}px)">${skyline}</div>
+      <div class="alt">Altitude ${Math.round(h*100000).toLocaleString()} ft · ${S.wins} wins</div>
+      <div class="rocketwrap" id="rk" style="bottom:${bottom}px">${rocketSVG(n,S.pts>0)}</div>
+      <div class="parts">${PARTS.map(p=>`<span class="${S.wins>=p.w?'':'lock'}">${S.wins>=p.w?'✓':'🔒'} ${p.n}${S.wins>=p.w?'':' · '+p.w+'W'}</span>`).join('')}</div>
+    </div>
+    ${nr?`<div class="lbl">Next Reward</div><div class="reward"><div class="ic">${nr.e}</div><div class="t">${nr.n}<small>${nr.c} points</small><div class="bar thin" style="margin-top:6px"><div style="width:${Math.min(100,avail()/nr.c*100)}%"></div></div></div><span style="color:var(--muted)">${avail()>=nr.c&&ti>=nr.t?'':ic('lock',18)}</span></div>`:''}
+    <button class="btn full" style="margin-top:6px" onclick="openPage('scan')">${ic('qr',18)} Scan to earn points</button>`;
+  } else if(seg==='redeem'){
+    body=`<div class="row" style="margin-bottom:12px"><span class="muted">Available to spend</span><b class="h" style="font-size:26px">${avail()} PTS</b></div>
+    ${REWARDS.map(r=>{const got=S.redeemed.includes(r.id),locked=ti<r.t,ok=avail()>=r.c;
+     return `<div class="reward"><div class="ic">${r.e}</div><div class="t">${r.n}<small>${r.c} points${locked?' · '+TIERS[r.t].n+' tier':''}</small></div>
+     <button class="btn sm" onclick="redeem('${r.id}')" ${got||locked||!ok?'disabled':''}>${got?'✓ Redeemed':locked?ic('lock',14):'Redeem'}</button></div>`}).join('')}`;
+  } else if(seg==='badges'){
+    body=`<div class="grid2" style="grid-template-columns:repeat(3,1fr)">${BADGES.map(b=>`<div class="badge ${S.badges.includes(b.id)?'':'lock'}" style="width:auto"><div class="ring">${b.e}</div>${b.n}</div>`).join('')}</div>
+    <p class="muted" style="margin-top:14px;text-align:center">${S.badges.length} of ${BADGES.length} unlocked</p>`;
+  } else {
+    body=`<div class="tiers">${TIERS.map((t,i)=>{const cur=i===ti,un=i<=ti,rng=TIERS[i+1]?`${t.min} – ${TIERS[i+1].min-1}`:`${t.min.toLocaleString()}+`;
+      return `<div class="tcard" style="border-color:${t.c}55;${cur?'box-shadow:0 0 0 1px '+t.c+',0 0 24px '+t.c+'44':''}">
+        ${mark(30,t.c==='#c4ced4'?'#CE1141':t.c)}<div class="h">${t.n.toUpperCase()}</div><div class="tag">${t.tag}</div>${tierBadge(i,110)}
+        <div><span class="range" style="border-color:${t.c};color:#fff">${rng} <small style="font-size:14px">POINTS</small></span></div>
+        <ul><h5>UNLOCKS</h5>${t.un.map(u=>`<li><span style="color:${t.c}">${ic('check',16)}</span>${u}</li>`).join('')}</ul>
+        <div class="tb" style="border-color:${t.c}">${cur?ic('crown',16)+' Current Tier':un?ic('check',16)+' Unlocked':ic('lock',16)+' Unlock at '+t.min.toLocaleString()+' points'}</div></div>`}).join('')}</div>
+    <p class="muted" style="text-align:center;margin-top:6px">Swipe to see all 5 tiers</p>`;
+  }
+  return `${topTab('MY REWARDS')}<div class="pad"><div class="seg">${segs.map(([k,v])=>`<button class="${seg===k?'on':''}" onclick="S.rseg='${k}';save();render()">${v}</button>`).join('')}</div>${body}
+  <div class="foot">SCAN / EARN / UNLOCK / REPEAT</div></div>`;
+}
+
+function fantasy(){
+  const segs=[['sim','Simulator'],['pred','Predictions']];
+  return `${topTab('FANTASY')}<div class="pad"><div class="seg">${segs.map(([k,v])=>`<button class="${S.fseg===k?'on':''}" onclick="S.fseg='${k}';save();render()">${v}</button>`).join('')}</div>
+  ${S.fseg==='pred'?predBody():simBody()}</div>`;
+}
+
+/* ---------- FANTASY SIMULATOR UI ---------- */
+const fp=id=>PLAYERS[id];
+const fMine=()=>S.fant.picks.map(fp);
+const tierChip=c=>`<span class="tier t${c}">$${c}</span>`;
+const pline=(p,right='')=>`<div class="pname"><b>${esc(p.n)}</b><small>${p.pos} · ${p.era}</small></div><span class="ovr">${p.r}</span>${right}`;
+const noteChips=ps=>`<div class="notes"><span class="pill">Team rating ${teamStr(ps).toFixed(1)}</span>${balance(ps).notes.map(([c,t])=>`<span class="pill ${c}">${t}</span>`).join('')}</div>`;
+function simBody(){
+  const F=S.fant,mine=fMine(),spent=mine.reduce((a,p)=>a+p.c,0),left=BUDGET-spent,full=mine.length===5;
+  const max=left-(4-mine.length);
+  const slots=[0,1,2,3,4].map(i=>{const p=mine[i];return p
+    ?`<div class="slot">${tierChip(p.c)}${pline(p,`<button class="x" aria-label="Remove ${esc(p.n)}" onclick="fRemove(${p.id})">✕</button>`)}</div>`
+    :`<div class="slot empty"><span class="tier t0">${i+1}</span><span>Open slot. Pick from the player vault below.</span></div>`}).join('');
+  let opp='',board='';
+  if(F.opp){const o=F.opp.map(fp);
+    opp=`<div class="card" id="oppcard"><div class="row"><h3 style="margin:0">The Vault Five</h3><span class="pill red">$${o.reduce((a,p)=>a+p.c,0)} of $${OPP_BUDGET}</span></div>
+     <p class="muted" style="margin:4px 0 6px">A random Rockets five drawn with a bigger budget, weighted toward the stars.</p>
+     ${o.map(p=>`<div class="slot">${tierChip(p.c)}${pline(p)}</div>`).join('')}
+     ${noteChips(o)}
+     <div class="row" style="gap:8px"><button class="btn full" onclick="fTip()" ${full&&!(F.game&&F.game.anim)?'':'disabled'}>🏀 Tip off</button><button class="btn ghost full" onclick="fDraw()" ${F.game&&F.game.anim?'disabled':''}>Redraw opponent</button></div></div>`;}
+  if(F.game){const g=F.game,n=g.q[0].length,hide=s=>g.anim?`class="hid" data-s="${s}"`:'';
+    const head=g.q[0].map((_,i)=>`<th>${i<4?'Q'+(i+1):'OT'+(i-3>1?i-3:'')}</th>`).join('');
+    const row=(lbl,k,tot,won)=>`<tr class="${won?'won':''}"><td><b style="font-size:12px">${lbl}</b></td>${g.q[k].map((v,i)=>`<td ${hide(i)}>${v}</td>`).join('')}<td class="tot ${g.anim?'hid':''}" ${g.anim?`data-s="${n}"`:''}>${tot}</td></tr>`;
+    const sc=(k,lbl)=>`<div><h5>${lbl}</h5>${g.box[k].slice(0,3).map(r=>`<div><span>${esc(fp(r.id).n)}</span><b>${r.pts}</b></div>`).join('')}</div>`;
+    const mvp=fp(g.mvp),mvpPts=[...g.box[0],...g.box[1]].find(r=>r.id===g.mvp).pts;
+    board=`<div class="card" id="sbcard"><h3>Final${g.ot?' · '+(g.ot>1?g.ot+'OT':'OT'):''}</h3>
+     <div style="overflow-x:auto"><table class="sbt"><tr><th></th>${head}<th>T</th></tr>${row('YOUR FIVE',0,g.ta,g.win)}${row('VAULT FIVE',1,g.tb,!g.win)}</table></div>
+     <div class="fres ${g.anim?'hid':''}" ${g.anim?`data-s="${n+1}"`:''}>
+      <div class="banner"><div class="h" style="color:${g.win?'var(--gold)':'var(--text)'}">${g.win?'YOU BEAT THE VAULT':'THE VAULT WINS'}</div>
+      <p class="muted" style="margin-top:4px">Game MVP: <b style="color:var(--text)">${esc(mvp.n)}</b> · ${mvpPts} pts</p>
+      <span class="pill green boost" style="display:inline-block;margin-top:8px">+${g.win?25:5} points</span></div>
+      <div class="scorers">${sc(0,'YOUR TOP SCORERS')}${sc(1,'VAULT TOP SCORERS')}</div>
+      <div class="row" style="gap:8px"><button class="btn full" onclick="fTip()">Run it back</button><button class="btn ghost full" onclick="fDraw()">New opponent</button></div>
+     </div></div>`;}
+  const pool=PLAYERS.map(p=>{const picked=F.picks.includes(p.id),can=!full&&p.c<=max,show=(!F.tier||p.c===F.tier)&&(F.pos==='all'||p.pos.includes(F.pos));
+    const q=F.q.trim().toLowerCase(),hit=!q||p.n.toLowerCase().includes(q);
+    const btn=picked?`<button class="add on" onclick="fRemove(${p.id})" aria-label="Remove ${esc(p.n)}">✓</button>`:`<button class="add" onclick="fAdd(${p.id})" ${can?'':'disabled'}>Add</button>`;
+    return show?`<div class="prow" data-n="${esc(p.n.toLowerCase())}" ${hit?'':'hidden'}>${tierChip(p.c)}${pline(p,btn)}</div>`:''}).join('');
+  const shown=PLAYERS.filter(p=>(!F.tier||p.c===F.tier)&&(F.pos==='all'||p.pos.includes(F.pos))).length;
+  return `
+  <div class="card" style="background:linear-gradient(135deg,#CE1141,#5a0718);border:none">
+   <div class="h" style="font-size:30px;line-height:1">BUILD YOUR STARTING 5</div>
+   <p style="font-size:12px;opacity:.9;margin-top:6px;line-height:1.45">Spend $${BUDGET} on any five players who wore a Rockets jersey, San Diego to today. Then beat a random Rockets five with a $${OPP_BUDGET} budget.</p>
+   <div class="row" style="margin-top:10px;justify-content:flex-start;gap:6px"><span class="pill" style="background:rgba(0,0,0,.3);color:#fff">Record ${F.w}–${F.l}</span><span class="pill" style="background:rgba(0,0,0,.3);color:#fff">Best streak ${F.best}</span><span class="pill boost" style="background:rgba(0,0,0,.3);color:#fff">Win +25 · Play +5</span></div>
+  </div>
+  <div class="card"><div class="row"><h3 style="margin:0">Your starting 5</h3>${mine.length?`<button class="muted" onclick="fClear()">Clear</button>`:''}</div>
+   <div class="budget"><span>Budget</span><span><b>$${left}</b> left of $${BUDGET}</span></div>
+   <div class="bar" style="margin-bottom:6px"><div style="width:${spent/BUDGET*100}%;background:${left===0?'var(--gold)':'var(--red)'}"></div></div>
+   ${slots}
+   ${mine.length?noteChips(mine):''}
+   ${F.opp?'':`<button class="btn full" style="margin-top:6px" onclick="fDraw()" ${full?'':'disabled'}>${full?'Draw your opponent':`Pick ${5-mine.length} more player${5-mine.length===1?'':'s'}`}</button>`}
+  </div>
+  ${opp}${board}
+  <div class="card" id="vault"><div class="row"><h3 style="margin:0">Player vault</h3><span class="muted" style="font-size:11px">${shown} players</span></div>
+   <input type="text" id="psearch" style="margin:10px 0 8px" placeholder="Search by name" value="${esc(F.q)}" oninput="fSearch(this.value)">
+   <div class="chips" style="margin-bottom:6px">${[0,5,4,3,2,1].map(t=>`<button class="${F.tier===t?'on':''}" onclick="S.fant.tier=${t};save();render(true)">${t?'$'+t:'All prices'}</button>`).join('')}</div>
+   <div class="chips">${[['all','All positions'],['G','Guards'],['F','Forwards'],['C','Bigs']].map(([k,v])=>`<button class="${F.pos===k?'on':''}" onclick="S.fant.pos='${k}';save();render(true)">${v}</button>`).join('')}</div>
+   ${pool}
+   <p class="muted" style="font-size:10.5px;margin-top:10px;line-height:1.5">$5 = 93+ rating · $4 = 86–92 · $3 = 80–85 · $2 = 74–79 · $1 = 73 and under. Ratings are our estimates of each player’s Rockets years. A lineup with a guard, a forward and a big gets +2; no guard or no big costs −3.</p>
+  </div>`;
+}
+function fAdd(id){const F=S.fant,mine=fMine(),left=BUDGET-mine.reduce((a,p)=>a+p.c,0);
+  if(mine.length>=5||F.picks.includes(id)||fp(id).c>left-(4-mine.length))return;
+  F.picks.push(id);F.game=null;if(F.opp&&F.opp.includes(id))F.opp=null;save();render(true)}
+function fRemove(id){S.fant.picks=S.fant.picks.filter(x=>x!==id);S.fant.game=null;save();render(true)}
+function fClear(){Object.assign(S.fant,{picks:[],opp:null,game:null});save();render(true)}
+function fSearch(v){S.fant.q=v;save();const q=v.trim().toLowerCase();document.querySelectorAll('#vault .prow').forEach(r=>r.hidden=!!q&&!r.dataset.n.includes(q))}
+function fDraw(){const F=S.fant;F.opp=genOpp(F.picks).map(p=>p.id);F.game=null;save();render(true);const el=$('oppcard');if(el)el.scrollIntoView({behavior:'smooth',block:'start'})}
+function fTip(){const F=S.fant;if(!F.opp||F.picks.length<5)return;
+  const a=fMine(),b=F.opp.map(fp),g=simGame5(a,b);
+  g.box=[boxScore(a,g.ta),boxScore(b,g.tb)];g.win=g.ta>g.tb;g.mvp=(g.win?g.box[0]:g.box[1])[0].id;g.anim=true;g.scored=false;
+  F.game=g;save();render(true);
+  const el=$('sbcard');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+  const steps=g.q[0].length+2;let s=0;
+  const tick=()=>{if(S.fant.game!==g)return;document.querySelectorAll(`#sbcard [data-s="${s}"]`).forEach(e=>e.classList.remove('hid'));s++;
+    if(s<steps)setTimeout(tick,s===steps-1?900:650);else fFinish(g)};
+  setTimeout(tick,500);
+}
+function fFinish(g){if(g.scored)return;g.scored=true;g.anim=false;const F=S.fant;
+  if(g.win){F.w++;F.streak++;F.best=Math.max(F.best,F.streak)}else{F.l++;F.streak=0}
+  const pts=g.win?25:5;if(!S.classic)addPts(pts);
+  push(g.win?`You beat the Vault ${g.ta}–${g.tb}`:`The Vault wins ${g.tb}–${g.ta}`,`${fp(g.mvp).n} was Game MVP. +${pts} points.`,g.win?'🏆':'🏀');
+  done(true)}
+
+function predBody(){
+  const o=nextOpp(),p=S.pred[S.next]||{},locked=!!p.locked;
+  const Q=[['w','Who wins?',['HOU',o[0]]],['m','Winning margin',['1–5','6–10','11+']],['t','Total points',['Under 220','Over 220']]];
+  const board=[['clutchkid713',420],['thirdward_hooper',360],['You',S.predHist.reduce((a,h)=>a+h.pts,0)],['eado_ella',190],['pops94',140]].sort((a,b)=>b[1]-a[1]);
+  return `
+  <div class="card" style="background:linear-gradient(135deg,#CE1141,#5a0718);border:none"><div class="h" style="font-size:30px;line-height:1">CALL THE GAME</div><p style="font-size:12px;opacity:.85;margin-top:4px">HOU vs ${o[1]} · ${DATES[0]} · Picks lock at tip-off</p></div>
+  <div class="card">
+    ${Q.map(([k,label,opts])=>`<div class="q"><p>${label}</p><div class="opts">${opts.map(x=>`<button class="${p[k]===x?'sel':''}" onclick="pick('${k}','${x}')" ${locked?'disabled':''}>${x}</button>`).join('')}</div></div>`).join('')}
+    <button class="btn full" onclick="lockPred()" ${locked||!(p.w&&p.m&&p.t)?'disabled':''}>${locked?'🔒 Picks locked · sim the game to score them':'Lock picks · up to +30 points'}</button>
+  </div>
+  <div class="card"><h3>Pick history</h3>${S.predHist.slice(0,5).map(h=>`<div class="row" style="padding:6px 0;font-size:12px;border-bottom:1px solid var(--line)"><span>vs ${h.opp} · ${h.correct}/3 correct</span><span class="pill ${h.pts?'green':''}">+${h.pts}</span></div>`).join('')||'<p class="muted">No scored picks yet.</p>'}</div>
+  <div class="card"><h3>Prediction leaderboard</h3>${board.map((b,i)=>`<div class="lb ${b[0]==='You'?'me':''}"><span class="n">${i+1}</span><span style="flex:1">${b[0]}</span><b>${b[1]}</b></div>`).join('')}</div>`;
+}
+
+function shop(){
+  const ti=tierIdx(S.pts),off=ti>=3?15:ti>=2?10:0;
+  return `<div class="topbar"><div style="width:34px">${mark(28)}</div><div class="center"><span class="h">SHOP</span></div><button class="iconbtn" onclick="push('Cart','${S.cart} item(s) in your cart (demo).','🛒')">${ic('cart',22)}${S.cart?`<b>${S.cart}</b>`:''}</button></div>
+  <div class="pad">
+   <div class="card boost" style="display:flex;gap:12px;align-items:center;border-color:${off?'var(--gold)':'var(--line)'}">${tierBadge(ti,46)}<div style="font-size:12px">${off?`<b style="color:var(--gold)">${TIERS[ti].n} member pricing: ${off}% off</b><br><span class="muted">Applied automatically.</span>`:`<b>Members save more</b><br><span class="muted">All-Star: 10% off · MVP and up: 15% off</span>`}</div></div>
+   <div class="grid2">${SHOP.map((p,i)=>{const price=off?(p.p*(1-off/100)).toFixed(2):p.p;
+     return `<div class="prod"><div class="img">${p.e}</div><div class="b"><b>${p.n}</b>${p.tag?`<div class="muted" style="font-size:10px;margin-bottom:4px">${p.tag}</div>`:''}<div class="row"><span>${off?`<s>$${p.p}</s>`:''}<b style="display:inline;min-height:0">$${price}</b></span><button class="btn sm" onclick="addCart(${i})">Add</button></div></div></div>`}).join('')}</div>
+   <p class="muted" style="text-align:center;margin-top:12px">Want free gear? Redeem points in <a href="#" onclick="S.rseg='redeem';nav('rewards');return false" style="color:var(--red2)">Rewards</a>.</p>
+  </div>`;
+}
+
+function profile(){
+  const ti=tierIdx(S.pts),per=PERSONAS.find(p=>p.k===S.persona);
+  return `${topTab('PROFILE')}<div class="pad" style="text-align:center">
+   <div style="display:flex;justify-content:center;margin:6px 0 10px">${avatar(84)}</div>
+   <b style="font-size:20px">${user()}</b><div class="muted">Member since 2026 · ${per?per.n:'Fan'}</div>
+   <div class="grid2 boost" style="margin:16px 0 14px">
+     <div class="card" style="margin:0"><div class="row" style="justify-content:center;gap:6px"><span style="color:var(--gold)">${ic('star',22)}</span><b class="h" style="font-size:30px">${S.pts}</b></div><div class="muted">Points</div></div>
+     <div class="card" style="margin:0"><div class="row" style="justify-content:center;gap:6px"><span style="color:var(--red2)">${ic('badge',22)}</span><b class="h" style="font-size:30px">${S.badges.length}</b></div><div class="muted">Badges</div></div>
+   </div>
+   <div class="boost" style="text-align:left"><div class="row"><div class="lbl">My Badges</div><a href="#" onclick="S.rseg='badges';nav('rewards');return false" class="muted">See All ›</a></div>
+     <div class="badges">${BADGES.map(b=>`<div class="badge ${S.badges.includes(b.id)?'':'lock'}"><div class="ring">${b.e}</div>${b.n}</div>`).join('')}</div>
+     <div class="card" style="display:flex;gap:12px;align-items:center;margin-top:12px">${tierBadge(ti,46)}<div><b>Keep showing up.</b><div class="muted">More challenges. More rewards.</div></div></div>
+   </div>
+   <div style="text-align:left;margin-top:6px">
+     ${mrow('user','Fan type',per?per.n:'Not set','personaSheet()')}
+     ${mrow('toggle','Classic View','Hide points, fantasy & rewards.','toggleClassic()',false,`<div class="sw ${S.classic?'on':''}"></div>`)}
+     ${mrow('bell','Notifications','Game alerts, events & rewards.','openNotes()')}
+   </div>
+  </div>`;
+}
+
+/* ---------- SUB-PAGES ---------- */
+function scan(){
+  const a=S.arg||{};const label=a.label||'Rockets Tech Challenge station';
+  return `${topBack('Scan Rewards')}<div class="scanbg">
+   ${mark(54)}
+   <div class="viewfinder"><div class="qr">${qrSVG()}</div><div class="scanline"></div></div>
+   <div class="h" style="font-size:24px">SCAN THE QR CODE</div>
+   <p class="muted" style="font-size:13px;margin:4px 0 4px;color:#d6d6de">at the event station to earn points and unlock rewards.</p>
+   <span class="pill red" style="display:inline-block;margin:8px 0 16px">${esc(label)}</span>
+   <button class="btn full" onclick="doScan()">${ic('qr',18)} Tap to scan</button><br>
+   <button class="flash" id="fl" onclick="this.classList.toggle('on')">${ic('flashlight',16)} Tap to turn on flashlight</button>
+  </div>`;
+}
+function scanned(){
+  const l=S.last||{label:'event station',n:25};
+  const conf=Array.from({length:22},(_,i)=>`<i style="left:${(i*47)%100}%;animation-delay:${(i%7)*.12}s;background:${i%3?'#ff2d55':'#f5c542'};transform:rotate(${i*30}deg)"></i>`).join('');
+  return `<div class="earned"><div class="confetti">${conf}</div>${mark(72)}
+   <h2>POINTS EARNED!</h2>
+   <p style="font-size:13px;color:#d6d6de">You scanned a Rockets event QR code at <b>${esc(l.label)}</b> and earned ${l.n} points!</p>
+   <div class="big"><div class="star">${ic('star',30)}</div><div><div class="h" style="font-size:32px">+${l.n} POINTS</div><div class="muted">${l.arena?'Arena Check-in':'Event Participation'}</div></div></div>
+   ${l.tierUp!=null?`<div class="tierrow next" style="text-align:left">${tierBadge(l.tierUp,50)}<div><div class="h">YOU’RE NOW ${TIERS[l.tierUp].n.toUpperCase()}</div><p>New perks unlocked.</p></div></div>`:''}
+   <button class="btn full" onclick="S.rseg='overview';nav('rewards')">View My Rewards</button>
+   <p class="muted" style="margin-top:22px">Keep going! Scan more stations<br>to unlock more rewards.</p>
+   <button class="btn ghost full" style="margin-top:14px" onclick="openPage('scan')">Scan another</button></div>`;
+}
+function challenges(){
+  const ti=tierIdx(S.pts);
+  return `${topBack('Challenges')}<div class="pad">
+  ${CHAL.map(c=>{const v=Math.min(c.v(),c.g),complete=v>=c.g,cl=S.claimed.includes(c.id),locked=ti<c.t;
+   return `<div class="card chal" style="${locked?'opacity:.5':''}"><div class="ic">${ic(locked?'lock':c.i,20)}</div><div class="tx"><b>${c.n}</b>${c.t?' <span class="pill gold">Bonus</span>':''}<p>${locked?'Unlocks at '+TIERS[c.t].n+' tier':c.d}</p>
+   <div class="row"><div class="bar thin" style="flex:1"><div style="width:${v/c.g*100}%"></div></div><span class="muted" style="font-size:10px">${v}/${c.g}</span></div></div>
+   <button class="btn sm" onclick="claim('${c.id}')" ${!complete||cl||locked?'disabled':''}>${cl?'✓':'+'+c.r}</button></div>`}).join('')}</div>`;
+}
+function leaderboard(){
+  const rows=[['clutchkid713',1240],['thirdward_hooper',980],['tsu_tigerfan',760],['eado_ella',530],['pops94',410],['midtown_marcus',260],['alief_ace',120],[user()+' (You)',S.pts]].sort((a,b)=>b[1]-a[1]);
+  const me=rows.findIndex(r=>r[0].includes('(You)'))+1;
+  return `${topBack('Leaderboard')}<div class="pad">
+   <div class="card" style="text-align:center;background:linear-gradient(135deg,#CE1141,#5a0718);border:none"><div class="muted" style="color:#ffd0d8">Your Houston rank</div><div class="h" style="font-size:52px;line-height:1">#${me}</div><div style="font-size:12px">${S.pts} points · ${TIERS[tierIdx(S.pts)].n}</div></div>
+   <div class="card" style="padding:4px 14px">${rows.map((r,i)=>`<div class="lb ${r[0].includes('(You)')?'me':''}"><span class="n">${i+1}</span><span class="av">${r[0][0].toUpperCase()}</span><span style="flex:1">${esc(r[0])}</span>${tierBadge(tierIdx(r[1]),26)}<b style="width:44px;text-align:right">${r[1]}</b></div>`).join('')}</div></div>`;
+}
+function events(){
+  const list=EVENTS.filter(e=>S.filter==='all'||e.aud.includes(S.filter));
+  return `${topBack('Events')}<div class="pad">
+  <div class="chips">${Object.entries(AUD).map(([k,v])=>`<button class="${S.filter===k?'on':''}" onclick="S.filter='${k}';save();render()">${v}</button>`).join('')}</div>
+  ${list.map(e=>{const r=S.rsvp[e.id],c=S.checked[e.id];
+   return `<div class="card"><div class="ev"><div class="date"><small>${e.m}</small><div class="h">${e.d}</div></div><div style="flex:1">
+    <div class="tags">${e.aud.map(a=>`<span class="pill">${AUD[a]}</span>`).join('')}</div>
+    <h4>${e.t}</h4><div class="loc">📍 ${e.loc}</div><p>${e.p}</p>
+    ${e.id==='phone'?`<div class="row" style="gap:6px"><input type="text" id="code" placeholder="Enter code (try LIFTOFF)"><button class="btn sm" onclick="redeemCode()">Go</button></div>`:
+    `<div class="row" style="gap:6px;justify-content:flex-start"><button class="btn sm ${r?'ghost':''}" onclick="rsvp('${e.id}')" ${r?'disabled':''}>${r?'✓ Going':'RSVP'}<span class="boost">${r?'':' +10'}</span></button>
+     <button class="btn sm ghost boost" onclick="openPage('scan',{label:'${e.t.replace(/'/g,'')}',ev:'${e.id}'})" ${!r||c?'disabled':''}>${c?'✓ Checked in':ic('qr',14)+' Scan check-in'}</button></div>`}
+   </div></div></div>`}).join('')}</div>`;
+}
+function booth(){
+  return `${topBack('Photo Booth')}<div class="pad">
+  <canvas id="cv" width="600" height="750"></canvas>
+  <div class="frames">${['Clutch City','Liftoff','Red Nation'].map((f,i)=>`<button class="${S.frame===i?'on':''}" onclick="S.frame=${i};save();render()">${f}</button>`).join('')}</div>
+  <label class="btn ghost full" style="margin-bottom:8px">${ic('camera',18)} Take or upload photo<input type="file" accept="image/*" capture="user" id="file" style="display:none"></label>
+  <button class="btn full" onclick="sharePhoto()">Save & share ${S.shared?'':'+10'}</button></div>`;
+}
+function family(){
+  return `${topBack('Fan Family & Legacy Wall')}<div class="pad">
+  <div class="card boost"><h3>Fan Family</h3>
+   <p style="font-size:13px;margin-bottom:10px">Link a longtime fan (or a new one). You both earn bonus points at every game you check in to together.</p>
+   <button class="btn full" onclick="squad()" ${S.squad?'disabled':''}>${S.squad?'✓ Linked: Pops (fan since ’94)':'Link a fan +20'}</button></div>
+  <div class="card"><h3>Legacy Wall</h3>
+   ${S.memories.map(m=>`<div class="memory">${esc(m)}<b>You · just now</b></div>`).join('')}
+   <div class="memory">Watching the ’94 parade with my dad on his shoulders. Now I bring my daughter.<b>Sample fan · 30+ years</b></div>
+   <div class="memory">First game I ever went to was a student night. Hooked since.<b>Sample fan · 3 years</b></div>
+   <textarea id="mem" rows="2" placeholder="Share your favorite Rockets memory…"></textarea>
+   <button class="btn ghost full" style="margin-top:8px" onclick="addMem()">Post to the wall<span class="boost">&nbsp;+10</span></button></div></div>`;
+}
+const PAGES={scan,scanned,challenges,leaderboard,events,booth,family};
+const TABFN={home,tickets,rewards,fantasy,shop,profile};
+
+/* ---------- ACTIONS ---------- */
+function nav(t){S.tab=t;S.page=null;save();render()}
+function openPage(p,arg){S.page=p;S.arg=arg||null;save();render()}
+function back(){S.page=null;save();render()}
+function toggleClassic(){S.classic=!S.classic;save();render();push(S.classic?'Classic view on':'Classic view off',S.classic?'Just tickets, events and shop.':'Points, fantasy and rewards are back.',S.classic?'🏆':'🚀')}
+function doScan(){
+  const a=S.arg||{};const label=a.label||'Rockets Tech Challenge station';
+  S.last={label,n:25,arena:!!a.arena,tierUp:null};
+  if(a.ev)S.checked[a.ev]=1;
+  if(a.arena){S.arena=S.next;if(S.squad)S.last.n=35}
+  S.scans++;addPts(S.last.n);S.page='scanned';done();
+}
+function squad(){S.squad=true;addPts(20);push('Fan linked','You and Pops are linked. Check in together for bonus points.','👨‍👧');done()}
+function addMem(){const v=$('mem').value.trim();if(!v)return;S.memories.unshift(v);if(!S.classic)addPts(10);done()}
+function redeem(id){const r=REWARDS.find(x=>x.id===id);S.spent+=r.c;S.redeemed.push(id);push('Redeemed: '+r.n,'Pick it up at the team store or your next event.','🎁');done()}
+function claim(id){const c=CHAL.find(x=>x.id===id);S.claimed.push(id);addPts(c.r);push('Challenge complete: '+c.n,'+'+c.r+' points.','🏁');done()}
+function pick(k,v){(S.pred[S.next]=S.pred[S.next]||{})[k]=v;save();render()}
+function lockPred(){S.pred[S.next].locked=true;save();push('Picks locked','We’ll score them at the final buzzer.','🎯');render()}
+function rsvp(id){S.rsvp[id]=1;if(!S.classic)addPts(10);const e=EVENTS.find(x=>x.id===id);push('You’re going: '+e.t,e.m+' '+e.d+' · We’ll remind you the day before.','📅');done()}
+function addCart(i){S.cart++;save();render();push('Added to cart',SHOP[i].n,'🛒')}
+function redeemCode(){
+  const v=($('code').value||'').trim().toUpperCase();
+  if(!['LIFTOFF','CLUTCHCITY','REDNATION','HTOWN'].includes(v)){push('Code not found','Keep hunting: the red phone booth moves every week.','☎️');return}
+  if(S.codes.includes(v)){push('Already used','You’ve already claimed '+v+'.','☎️');return}
+  S.codes.push(v);addPts(50);push('Secret code unlocked','+50 points. The city answered.','☎️');done();
+}
+function simGame(){
+  const o=nextOpp(),win=Math.random()<.62,us=96+Math.floor(Math.random()*28);
+  const them=win?us-1-Math.floor(Math.random()*14):us+1+Math.floor(Math.random()*14);
+  const partsBefore=partsOn();
+  S.games.unshift({opp:o[0],win,us,them});
+  if(win)S.wins++;else S.losses++;
+  let gain=5+(win?15:0);
+  if(S.squad&&S.arena===S.next){S.squadGames++;gain+=10}
+  const p=S.pred[S.next];
+  if(p&&p.locked){
+    const total=us+them,margin=Math.abs(us-them),wTeam=win?'HOU':o[0];
+    const mB=margin<=5?'1–5':margin<=10?'6–10':'11+',tB=total>220?'Over 220':'Under 220';
+    const correct=[p.w===wTeam,p.m===mB,p.t===tB].filter(Boolean).length;
+    S.predHist.unshift({opp:o[0],correct,pts:correct*10});gain+=correct*10;
+    setTimeout(()=>push('Picks scored: '+correct+'/3',correct?`+${correct*10} points added.`:'No points this time. New game, new picks.','🎯'),2600);
+  }
+  S.next++;addPts(gain);
+  push(`Final: ${win?'W':'L'} ${us}–${them} vs ${o[0]}`,win?`+${gain} points. Your rocket is climbing!`:`+${gain} points. Losses still count: loyalty earns.`,win?'🚀':'🏀');
+  const pa=partsOn();
+  if(pa>partsBefore)setTimeout(()=>push('Rocket upgrade: '+PARTS[pa-1].n,'See it in Rewards → Overview.','🔧'),1500);
+  if(!S.classic){S.tab='rewards';S.rseg='overview';S.page=null}
+  done();
+  const rk=$('rk');if(rk){rk.classList.add('boost');setTimeout(()=>rk.classList.remove('boost'),1300)}
+}
+
+/* ---------- PHOTO BOOTH ---------- */
+let photo=null;
+function drawBooth(){
+  const cv=$('cv');if(!cv)return;const x=cv.getContext('2d'),W=600,H=750;
+  x.clearRect(0,0,W,H);
+  if(photo){const r=Math.max(W/photo.width,H/photo.height),w=photo.width*r,h=photo.height*r;x.drawImage(photo,(W-w)/2,(H-h)/2,w,h)}
+  else{const g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#2a0712');g.addColorStop(1,'#0b0b0f');x.fillStyle=g;x.fillRect(0,0,W,H);
+    x.fillStyle='#55556a';x.font='600 26px Inter';x.textAlign='center';x.fillText('Add a photo below',W/2,H/2)}
+  const cols=[['#CE1141','#ffffff'],['#0b0b0f','#f5c542'],['#ffffff','#CE1141']][S.frame];
+  x.lineWidth=28;x.strokeStyle=cols[0];x.strokeRect(14,14,W-28,H-28);
+  x.fillStyle=cols[0];x.fillRect(0,H-130,W,130);
+  x.fillStyle=cols[1];x.textAlign='left';x.font='86px "Bebas Neue"';x.fillText(['CLUTCH CITY','LIFTOFF','RED NATION'][S.frame],36,H-46);
+  x.font='700 18px Inter';x.fillText('HOUSTON · '+new Date().toLocaleDateString(),40,H-22);
+  x.save();x.translate(W-90,H-118);x.fillStyle=cols[1];
+  x.beginPath();x.moveTo(30,0);x.bezierCurveTo(48,20,48,60,44,92);x.lineTo(16,92);x.bezierCurveTo(12,60,12,20,30,0);x.fill();
+  x.fillStyle=cols[0];x.beginPath();x.arc(30,40,8,0,7);x.fill();x.restore();
+}
+function sharePhoto(){
+  const a=document.createElement('a');a.download='clutch-city-booth.png';a.href=$('cv').toDataURL('image/png');a.click();
+  if(!S.shared){S.shared=true;addPts(10)}done();
+}
+
+/* ---------- SHEETS ---------- */
+function openSheet(html){$('sheetBody').innerHTML=html;$('sheet').classList.add('open')}
+function closeSheet(){$('sheet').classList.remove('open')}
+$('sheet').addEventListener('click',e=>{if(e.target.id==='sheet'&&S.persona)closeSheet()});
+function personaSheet(){
+  openSheet(`<div style="text-align:center">${mark(48)}</div><div class="h" style="font-size:30px;text-align:center">WELCOME TO CLUTCH CITY</div><p class="muted" style="text-align:center">Who’s answering the call? We’ll tailor events and rewards to you.</p>
+  <div class="persona">${PERSONAS.map(p=>`<button onclick="setPersona('${p.k}')"><em>${p.e}</em><b>${p.n}</b><span class="muted">${p.d}</span></button>`).join('')}</div>
+  <p class="muted" style="margin-top:14px;text-align:center">Prefer just tickets and events? Turn on <b>Classic View</b> from Home anytime.</p>`);
+}
+function setPersona(k){const first=!S.persona;S.persona=k;S.filter=k;save();closeSheet();render();if(first)setTimeout(()=>push('The City Is Calling','Tip-off tonight at 7. Scan in at the arena for +25 points.','📞'),700)}
+function openNotes(){S.unread=0;save();document.querySelectorAll('.bellct').forEach(b=>b.style.display='none');
+  openSheet(`<div class="row"><div class="h" style="font-size:28px">NOTIFICATIONS</div><button class="btn ghost sm" onclick="closeSheet()">Close</button></div>
+  ${S.notes.map(n=>`<div class="note"><b>${n.icon} ${esc(n.title)}</b>${esc(n.body)}<div class="muted" style="font-size:10px;margin-top:2px">${n.t}</div></div>`).join('')||'<p class="muted" style="margin-top:10px">Nothing yet.</p>'}`)}
+
+/* ---------- RENDER ---------- */
+function render(keep){
+  const st=$('main').scrollTop;
+  if(S.tab==='predict')S.tab='fantasy';
+  document.body.classList.toggle('classic',S.classic);
+  if(S.classic&&['rewards','fantasy'].includes(S.tab))S.tab='home';
+  if(S.classic&&['scan','scanned','challenges','leaderboard','booth'].includes(S.page))S.page=null;
+  $('tabs').innerHTML=TABS.map(([k,l,i,b])=>`<button data-t="${k}" class="${S.tab===k?'on':''} ${b?'boost':''}" onclick="nav('${k}')">${ic(i,22)}${l}</button>`).join('');
+  $('main').innerHTML=S.page?PAGES[S.page]():TABFN[S.tab]();
+  $('main').scrollTop=keep?st:0;
+  if(S.page==='booth'){drawBooth();$('file').onchange=e=>{const f=e.target.files[0];if(!f)return;const img=new Image();img.onload=()=>{photo=img;drawBooth()};img.src=URL.createObjectURL(f)}}
+}
+$('simBtn').onclick=simGame;
+$('scanBtn').onclick=()=>{if(S.classic)toggleClassic();S.arg=null;doScan()};
+$('pushBtn').onclick=()=>{const m=[['The City Is Calling','Tip-off in 3 hours. Lock your picks for up to +30 points.','📞'],['☎️ Red phone ringing in EaDo','First 50 fans to answer get a secret code.','☎️'],['H.O.R.S.E. this Saturday','Emancipation Park, 11 AM. RSVP for +10 points.','🏀'],['You’re close to the next tier','A couple more scans and you level up.','🏅']];push(...m[Math.floor(Math.random()*m.length)])};
+$('resetBtn').onclick=()=>{S=fresh();photo=null;save();render();personaSheet()};
+const tick=()=>{$('clock').textContent=new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}).replace(/\s?[AP]M/,'')};
+tick();setInterval(tick,10000);
+if(S.fant.game&&S.fant.game.anim){S.fant.game.anim=false;S.fant.game.scored=true}
+render();
+if(!S.persona)personaSheet();
+</script>
+</body>
+</html>
