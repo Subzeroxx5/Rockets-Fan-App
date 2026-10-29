@@ -210,6 +210,18 @@ nav.tabs button.on svg{fill:var(--red2);stroke:var(--red2)}
 .scorers div div{display:flex;justify-content:space-between;gap:6px;padding:4px 0;border-bottom:1px solid var(--line)}
 .scorers span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
+/* DRAFT WAR ROOM */
+.pros{padding:12px 0;border-bottom:1px solid var(--line)}
+.pros:last-child{border-bottom:none}
+.pros .top{display:flex;align-items:center;gap:10px}
+.pros .rk{flex:none;width:26px;height:26px;border-radius:50%;background:var(--card2);display:grid;place-items:center;font-size:11px;font-weight:700;color:var(--muted)}
+.pros p{font-size:11.5px;color:#d0d0d8;margin:6px 0 0 36px;line-height:1.4}
+.pros.mine{background:linear-gradient(90deg,rgba(206,17,65,.12),transparent);border-radius:10px}
+.cons{display:flex;align-items:center;gap:8px;margin:8px 0 0 36px;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.cons .bar{flex:1;height:6px}
+.pickcard{text-align:center;padding:18px 10px;border:2px solid var(--gold);border-radius:16px;margin-bottom:12px;background:radial-gradient(ellipse at 50% 0,rgba(245,197,66,.14),transparent 70%),var(--card)}
+.pickcard .h{font-size:34px;line-height:1;margin:6px 0 2px}
+
 /* EVENTS, SHOP, MISC */
 .chips{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;scrollbar-width:none}
 .chips button{flex:none;padding:7px 12px;border-radius:20px;background:var(--card);border:1px solid var(--line);font-size:11px;font-weight:700}
@@ -305,6 +317,7 @@ textarea:focus,input:focus{outline:2px solid var(--red)}
       <li>Scan QR codes at event stations for points and climb 5 tiers, Rookie to Hall of Fame</li>
       <li>Your rocket climbs with your points and gets a new upgrade with each win</li>
       <li>Fantasy: build a $20 starting 5 from every era of Rockets history, plus game predictions</li>
+      <li>Draft War Room: vote on Houston’s pick in the offseason and earn points if you call it</li>
       <li>Challenges, badges and a Houston leaderboard</li>
       <li>Youth & college events: AI literacy, 3v3, H.O.R.S.E., skills challenges, pop-ups</li>
     </ul></div>
@@ -575,13 +588,27 @@ function simGame5(a,b){const sa=teamStr(a),sb=teamStr(b),q=[[],[]];
   let ta=q[0].reduce((x,y)=>x+y),tb=q[1].reduce((x,y)=>x+y),ot=0;
   while(ta===tb){ot++;const x=Math.round(11+(sa-85)*0.2+gauss()*2.5),y=Math.round(11+(sb-85)*0.2+gauss()*2.5);q[0].push(x);q[1].push(y);ta+=x;tb+=y}
   return{q,ta,tb,ot}}
+/* ---------- DRAFT WAR ROOM: sample prospects (the real board would load each spring) ---------- */
+const DRAFT={year:2027,pick:18};
+const PROSPECTS=[
+ {n:'Dariel Weston',pos:'G',ht:'6\'4"',age:19,from:'NCAA · Freshman',note:'Shot creator off the dribble. Hit 38% from three on high volume.',votes:412},
+ {n:'Malik Ferrand',pos:'F',ht:'6\'8"',age:20,from:'NCAA · Sophomore',note:'3-and-D wing who guards four positions. Ready to play now.',votes:356},
+ {n:'Teo Vanderlinden',pos:'C',ht:'7\'0"',age:19,from:'Overseas · Spain',note:'Passing big with soft touch. Needs to add strength.',votes:241},
+ {n:'Cam Ashby',pos:'G',ht:'6\'1"',age:21,from:'NCAA · Junior',note:'Pick-and-roll point guard. Low turnovers, elite feel.',votes:198},
+ {n:'Isaiah Brandt',pos:'F/C',ht:'6\'10"',age:18,from:'NCAA · Freshman',note:'Raw rim protector with a 7\'4" wingspan. High ceiling.',votes:164},
+ {n:'Noah Kessler-Diaz',pos:'F',ht:'6\'7"',age:20,from:'Overseas · Australia',note:'Energy forward. Rebounds and defends every possession.',votes:97}];
+function addRookie(i){const p=PROSPECTS[i];if(PLAYERS.some(x=>x.rookie))return;
+  PLAYERS.push({id:PLAYERS.length,n:p.n,pos:p.pos,era:DRAFT.year+' rookie',r:73,c:1,rookie:true})}
+function removeRookie(){const r=PLAYERS.find(x=>x.rookie);if(!r)return;const F=S.fant;
+  F.picks=F.picks.filter(id=>id!==r.id);if(F.opp&&F.opp.includes(r.id))F.opp=null;F.game=null;PLAYERS.pop()}
 function boxScore(ps,total){const w=ps.map(p=>Math.pow(p.r,4)*(0.7+Math.random()*0.6)),sw=w.reduce((a,b)=>a+b,0);
   const rows=ps.map((p,i)=>({id:p.id,pts:Math.round(total*w[i]/sw)})).sort((a,b)=>b.pts-a.pts);
   rows[0].pts+=total-rows.reduce((a,r)=>a+r.pts,0);return rows}
 
 const fresh=()=>({pts:0,spent:0,wins:0,losses:0,games:[],next:0,scans:0,rsvp:{},checked:{},redeemed:[],pred:{},predHist:[],persona:null,classic:false,
   notes:[],unread:0,squad:false,squadGames:0,arena:-1,codes:[],memories:[],shared:false,filter:'all',tab:'home',page:null,arg:null,rseg:'overview',frame:0,badges:[],claimed:[],cart:0,last:null,
-  fseg:'sim',fant:{picks:[],opp:null,game:null,w:0,l:0,streak:0,best:0,tier:0,pos:'all',q:''}});
+  fseg:'sim',fant:{picks:[],opp:null,game:null,w:0,l:0,streak:0,best:0,tier:0,pos:'all',q:''},
+  draft:{vote:null,result:null}});
 let S;
 try{S=Object.assign(fresh(),JSON.parse(localStorage.getItem('ccxp2'))||{})}catch(e){S=fresh()}
 const save=()=>{try{localStorage.setItem('ccxp2',JSON.stringify(S))}catch(e){}};
@@ -769,10 +796,52 @@ function rewards(){
 }
 
 function fantasy(){
-  const segs=[['sim','Simulator'],['pred','Predictions']];
+  const segs=[['sim','Simulator'],['pred','Predictions'],['draft','Draft']];
   return `${topTab('FANTASY')}<div class="pad"><div class="seg">${segs.map(([k,v])=>`<button class="${S.fseg===k?'on':''}" onclick="S.fseg='${k}';save();render()">${v}</button>`).join('')}</div>
-  ${S.fseg==='pred'?predBody():simBody()}</div>`;
+  ${S.fseg==='pred'?predBody():S.fseg==='draft'?draftBody():simBody()}</div>`;
 }
+
+/* ---------- DRAFT WAR ROOM UI ---------- */
+function draftBody(){
+  const D=S.draft,votes=PROSPECTS.map((p,i)=>p.votes+(D.vote===i?1:0)),tot=votes.reduce((a,b)=>a+b,0);
+  const res=D.result;
+  const pickCard=res?(()=>{const p=PROSPECTS[res.pick],hit=D.vote===res.pick;
+    return `<div class="pickcard"><span class="pill gold">Pick #${DRAFT.pick} · ${DRAFT.year} NBA Draft</span>
+     <div class="muted" style="margin-top:10px">The Houston Rockets select</div><div class="h">${esc(p.n.toUpperCase())}</div>
+     <div class="muted">${p.pos} · ${p.ht} · ${esc(p.from)}</div>
+     <div style="margin-top:12px;font-size:13px">${D.vote==null?'You didn’t cast a vote this year.':hit?'<b style="color:var(--gold)">You called it.</b> <span class="boost">+50 points</span>':'Your pick: <b>'+esc(PROSPECTS[D.vote].n)+'</b>. Fans had him at '+Math.round(votes[D.vote]/tot*100)+'%.'}</div>
+     <div class="muted" style="margin-top:8px">Fan consensus had ${esc(p.n)} at ${Math.round(votes[res.pick]/tot*100)}%.</div>
+     <button class="btn full" style="margin-top:14px" onclick="S.fseg='sim';S.fant.tier=0;S.fant.pos='all';S.fant.q='${esc(p.n.toLowerCase()).replace(/'/g,'')}';save();render();setTimeout(()=>{const v=$('vault');if(v)v.scrollIntoView({block:'start'})},50)">See him in the player vault · $1</button>
+     <button class="btn ghost full" style="margin-top:8px" onclick="draftReset()">Reset the War Room (demo)</button></div>`})():'';
+  const board=PROSPECTS.map((p,i)=>{const pct=Math.round(votes[i]/tot*100),mine=D.vote===i;
+    return `<div class="pros ${mine?'mine':''}"><div class="top"><span class="rk">${i+1}</span>
+      <div class="pname"><b>${esc(p.n)}</b><small>${p.pos} · ${p.ht} · ${p.age} yrs · ${esc(p.from)}</small></div>
+      ${res?(res.pick===i?'<span class="pill gold">Drafted</span>':''):`<button class="add ${mine?'on':''}" onclick="draftVote(${i})">${mine?'✓ Your pick':'Vote'}</button>`}</div>
+      <p>${esc(p.note)}</p>
+      ${D.vote!=null||res?`<div class="cons"><div class="bar"><div style="width:${pct}%;background:${mine?'var(--red)':'#5a5a68'}"></div></div><span>${pct}%</span></div>`:''}</div>`}).join('');
+  return `
+  <div class="card" style="background:linear-gradient(135deg,#CE1141,#5a0718);border:none">
+   <div class="h" style="font-size:30px;line-height:1">DRAFT WAR ROOM</div>
+   <p style="font-size:12px;opacity:.9;margin-top:6px;line-height:1.45">${DRAFT.year} NBA Draft · Rockets pick #${DRAFT.pick}. Vote for who Houston should take. On draft night, fans who called the pick earn points, and the rookie joins the Fantasy vault.</p>
+   <div class="row" style="margin-top:10px;justify-content:flex-start;gap:6px"><span class="pill" style="background:rgba(0,0,0,.3);color:#fff">${res?'Draft complete':D.vote==null?'Voting open':'Vote cast'}</span><span class="pill boost" style="background:rgba(0,0,0,.3);color:#fff">Vote +10 · Call it +50</span></div>
+  </div>
+  ${pickCard}
+  <div class="card"><div class="row"><h3 style="margin:0">Big board</h3><span class="muted" style="font-size:11px">${tot.toLocaleString()} fan votes</span></div>
+   ${D.vote==null&&!res?'<p class="muted" style="margin-top:6px">Vote to see the fan consensus.</p>':''}
+   ${board}
+   ${res?'':`<button class="btn full" style="margin-top:12px" onclick="draftNight()" ${D.vote==null?'disabled':''}>${D.vote==null?'Vote to unlock draft night':'▶ Simulate draft night (demo)'}</button>`}
+   <p class="muted" style="font-size:10.5px;margin-top:10px">Sample prospects for the demo. The real board would load each spring with the actual draft class and Houston’s pick.</p>
+  </div>`;
+}
+function draftVote(i){const D=S.draft;if(D.result)return;const first=D.vote==null;D.vote=i;if(first&&!S.classic)addPts(10);save();render(true)}
+function draftNight(){const D=S.draft;if(D.result||D.vote==null)return;
+  const votes=PROSPECTS.map((p,i)=>p.votes+(D.vote===i?1:0)),w=votes.map(v=>Math.pow(v,1.3));
+  let t=w.reduce((a,b)=>a+b,0)*Math.random(),k=0;while(t>w[k]){t-=w[k];k++}
+  D.result={pick:k};addRookie(k);const p=PROSPECTS[k],hit=D.vote===k;
+  if(hit&&!S.classic)addPts(50);
+  push(`Rockets select ${p.n} at #${DRAFT.pick}`,hit?'You called it. +50 points. He’s now in the Fantasy vault at $1.':'He’s now in the Fantasy vault at $1.',hit?'🎯':'📋');
+  done()}
+function draftReset(){removeRookie();S.draft={vote:null,result:null};done()}
 
 /* ---------- FANTASY SIMULATOR UI ---------- */
 const fp=id=>PLAYERS[id];
@@ -1084,6 +1153,7 @@ $('resetBtn').onclick=()=>{S=fresh();photo=null;save();render();personaSheet()};
 const tick=()=>{$('clock').textContent=new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}).replace(/\s?[AP]M/,'')};
 tick();setInterval(tick,10000);
 if(S.fant.game&&S.fant.game.anim){S.fant.game.anim=false;S.fant.game.scored=true}
+if(S.draft.result)addRookie(S.draft.result.pick);
 render();
 if(!S.persona)personaSheet();
 </script>
