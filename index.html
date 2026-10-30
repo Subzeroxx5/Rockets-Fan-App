@@ -175,7 +175,7 @@ nav.tabs button.on svg{fill:var(--red2);stroke:var(--red2)}
 
 /* FANTASY */
 [hidden]{display:none!important}
-.tier{flex:none;width:32px;height:24px;border-radius:7px;display:grid;place-items:center;font-family:"Bebas Neue",Impact,sans-serif;font-size:16px;letter-spacing:.02em;color:#0a0a0d}
+.tier{flex:none;width:42px;height:24px;border-radius:7px;display:grid;place-items:center;font-family:"Bebas Neue",Impact,sans-serif;font-size:16px;letter-spacing:.02em;color:#0a0a0d}
 .t5{background:linear-gradient(135deg,#ffe28a,#c99a1c)} .t4{background:linear-gradient(135deg,#ff5c78,#CE1141);color:#fff}
 .t3{background:linear-gradient(135deg,#eef1f4,#9aa4ad)} .t2{background:linear-gradient(135deg,#f0b46a,#9a5a1f)}
 .t1{background:#3a3a44;color:#d6d6de} .t0{background:transparent;border:1.5px dashed var(--line);color:var(--muted)}
@@ -316,7 +316,7 @@ textarea:focus,input:focus{outline:2px solid var(--red)}
     <div class="pcol"><h2 style="color:var(--red2)">Attract younger fans</h2><ul>
       <li>Scan QR codes at event stations for points and climb 5 tiers, Rookie to Hall of Fame</li>
       <li>Your rocket climbs with your points and gets a new upgrade with each win</li>
-      <li>Fantasy: build a $20 starting 5 from every era of Rockets history, plus game predictions</li>
+      <li>Fantasy: build a 20-credit starting 5 from every era of Rockets history, plus game predictions</li>
       <li>Draft War Room: vote on Houston’s pick in the offseason and earn points if you call it</li>
       <li>Challenges, badges and a Houston leaderboard</li>
       <li>Youth & college events: AI literacy, 3v3, H.O.R.S.E., skills challenges, pop-ups</li>
@@ -422,7 +422,7 @@ const SHOP=[
 
 /* ---------- FANTASY: ALL-TIME ROCKETS PLAYER VAULT ----------
    name | position | Rockets era | rating (estimate of their Rockets years)
-   price: $5 = 93+, $4 = 86–92, $3 = 80–85, $2 = 74–79, $1 = 73 and under */
+   cost in credits: 5 = 93+, 4 = 86–92, 3 = 80–85, 2 = 74–79, 1 = 73 and under */
 const PLAYERS_RAW=`Hakeem Olajuwon|C|’80s–’00s|99
 James Harden|G|’10s–’20s|97
 Moses Malone|C|’70s–’80s|96
@@ -571,7 +571,7 @@ function balance(ps){const g=ps.some(isG),f=ps.some(isF),c=ps.some(isC);let b=0,
   if(!c){b-=3;notes.push(['red','No big man −3'])}
   return{b,notes}}
 const teamStr=ps=>ps.reduce((a,p)=>a+p.r,0)/ps.length+balance(ps).b;
-/* the Vault draws a boosted five: $25 budget, weighted toward $5 and $4 players, makes sure it has a guard and a big */
+/* the Vault draws a boosted five: 25 credits, weighted toward 5- and 4-credit players, makes sure it has a guard and a big */
 function genOpp(ex=[]){const picks=[];let budget=OPP_BUDGET;
   while(picks.length<5){const left=5-picks.length,max=budget-(left-1);
     const needG=left<=2&&!picks.some(isG),needC=left<=2&&!picks.some(isC);
@@ -811,7 +811,7 @@ function draftBody(){
      <div class="muted">${p.pos} · ${p.ht} · ${esc(p.from)}</div>
      <div style="margin-top:12px;font-size:13px">${D.vote==null?'You didn’t cast a vote this year.':hit?'<b style="color:var(--gold)">You called it.</b> <span class="boost">+50 points</span>':'Your pick: <b>'+esc(PROSPECTS[D.vote].n)+'</b>. Fans had him at '+Math.round(votes[D.vote]/tot*100)+'%.'}</div>
      <div class="muted" style="margin-top:8px">Fan consensus had ${esc(p.n)} at ${Math.round(votes[res.pick]/tot*100)}%.</div>
-     <button class="btn full" style="margin-top:14px" onclick="S.fseg='sim';S.fant.tier=0;S.fant.pos='all';S.fant.q='${esc(p.n.toLowerCase()).replace(/'/g,'')}';save();render();setTimeout(()=>{const v=$('vault');if(v)v.scrollIntoView({block:'start'})},50)">See him in the player vault · $1</button>
+     <button class="btn full" style="margin-top:14px" onclick="S.fseg='sim';S.fant.tier=0;S.fant.pos='all';S.fant.q='${esc(p.n.toLowerCase()).replace(/'/g,'')}';save();render();setTimeout(()=>{const v=$('vault');if(v)v.scrollIntoView({block:'start'})},50)">See him in the player vault · 1 credit</button>
      <button class="btn ghost full" style="margin-top:8px" onclick="draftReset()">Reset the War Room (demo)</button></div>`})():'';
   const board=PROSPECTS.map((p,i)=>{const pct=Math.round(votes[i]/tot*100),mine=D.vote===i;
     return `<div class="pros ${mine?'mine':''}"><div class="top"><span class="rk">${i+1}</span>
@@ -839,14 +839,14 @@ function draftNight(){const D=S.draft;if(D.result||D.vote==null)return;
   let t=w.reduce((a,b)=>a+b,0)*Math.random(),k=0;while(t>w[k]){t-=w[k];k++}
   D.result={pick:k};addRookie(k);const p=PROSPECTS[k],hit=D.vote===k;
   if(hit&&!S.classic)addPts(50);
-  push(`Rockets select ${p.n} at #${DRAFT.pick}`,hit?'You called it. +50 points. He’s now in the Fantasy vault at $1.':'He’s now in the Fantasy vault at $1.',hit?'🎯':'📋');
+  push(`Rockets select ${p.n} at #${DRAFT.pick}`,hit?'You called it. +50 points. He’s now in the Fantasy vault at 1 credit.':'He’s now in the Fantasy vault at 1 credit.',hit?'🎯':'📋');
   done()}
 function draftReset(){removeRookie();S.draft={vote:null,result:null};done()}
 
 /* ---------- FANTASY SIMULATOR UI ---------- */
 const fp=id=>PLAYERS[id];
 const fMine=()=>S.fant.picks.map(fp);
-const tierChip=c=>`<span class="tier t${c}">$${c}</span>`;
+const tierChip=c=>`<span class="tier t${c}">${c} CR</span>`;
 const pline=(p,right='')=>`<div class="pname"><b>${esc(p.n)}</b><small>${p.pos} · ${p.era}</small></div><span class="ovr">${p.r}</span>${right}`;
 const noteChips=ps=>`<div class="notes"><span class="pill">Team rating ${teamStr(ps).toFixed(1)}</span>${balance(ps).notes.map(([c,t])=>`<span class="pill ${c}">${t}</span>`).join('')}</div>`;
 function simBody(){
@@ -857,8 +857,8 @@ function simBody(){
     :`<div class="slot empty"><span class="tier t0">${i+1}</span><span>Open slot. Pick from the player vault below.</span></div>`}).join('');
   let opp='',board='';
   if(F.opp){const o=F.opp.map(fp);
-    opp=`<div class="card" id="oppcard"><div class="row"><h3 style="margin:0">The Vault Five</h3><span class="pill red">$${o.reduce((a,p)=>a+p.c,0)} of $${OPP_BUDGET}</span></div>
-     <p class="muted" style="margin:4px 0 6px">A random Rockets five drawn with a bigger budget, weighted toward the stars.</p>
+    opp=`<div class="card" id="oppcard"><div class="row"><h3 style="margin:0">The Vault Five</h3><span class="pill red">${o.reduce((a,p)=>a+p.c,0)} of ${OPP_BUDGET} credits</span></div>
+     <p class="muted" style="margin:4px 0 6px">A random Rockets five drawn with more credits, weighted toward the stars.</p>
      ${o.map(p=>`<div class="slot">${tierChip(p.c)}${pline(p)}</div>`).join('')}
      ${noteChips(o)}
      <div class="row" style="gap:8px"><button class="btn full" onclick="fTip()" ${full&&!(F.game&&F.game.anim)?'':'disabled'}>🏀 Tip off</button><button class="btn ghost full" onclick="fDraw()" ${F.game&&F.game.anim?'disabled':''}>Redraw opponent</button></div></div>`;}
@@ -884,11 +884,11 @@ function simBody(){
   return `
   <div class="card" style="background:linear-gradient(135deg,#CE1141,#5a0718);border:none">
    <div class="h" style="font-size:30px;line-height:1">BUILD YOUR STARTING 5</div>
-   <p style="font-size:12px;opacity:.9;margin-top:6px;line-height:1.45">Spend $${BUDGET} on any five players who wore a Rockets jersey, San Diego to today. Then beat a random Rockets five with a $${OPP_BUDGET} budget.</p>
+   <p style="font-size:12px;opacity:.9;margin-top:6px;line-height:1.45">Spend ${BUDGET} credits on any five players who wore a Rockets jersey, San Diego to today. Then beat a random Rockets five built with ${OPP_BUDGET} credits.</p>
    <div class="row" style="margin-top:10px;justify-content:flex-start;gap:6px"><span class="pill" style="background:rgba(0,0,0,.3);color:#fff">Record ${F.w}–${F.l}</span><span class="pill" style="background:rgba(0,0,0,.3);color:#fff">Best streak ${F.best}</span><span class="pill boost" style="background:rgba(0,0,0,.3);color:#fff">Win +25 · Play +5</span></div>
   </div>
   <div class="card"><div class="row"><h3 style="margin:0">Your starting 5</h3>${mine.length?`<button class="muted" onclick="fClear()">Clear</button>`:''}</div>
-   <div class="budget"><span>Budget</span><span><b>$${left}</b> left of $${BUDGET}</span></div>
+   <div class="budget"><span>Credits</span><span><b>${left}</b> left of ${BUDGET}</span></div>
    <div class="bar" style="margin-bottom:6px"><div style="width:${spent/BUDGET*100}%;background:${left===0?'var(--gold)':'var(--red)'}"></div></div>
    ${slots}
    ${mine.length?noteChips(mine):''}
@@ -897,10 +897,10 @@ function simBody(){
   ${opp}${board}
   <div class="card" id="vault"><div class="row"><h3 style="margin:0">Player vault</h3><span class="muted" style="font-size:11px">${shown} players</span></div>
    <input type="text" id="psearch" style="margin:10px 0 8px" placeholder="Search by name" value="${esc(F.q)}" oninput="fSearch(this.value)">
-   <div class="chips" style="margin-bottom:6px">${[0,5,4,3,2,1].map(t=>`<button class="${F.tier===t?'on':''}" onclick="S.fant.tier=${t};save();render(true)">${t?'$'+t:'All prices'}</button>`).join('')}</div>
+   <div class="chips" style="margin-bottom:6px">${[0,5,4,3,2,1].map(t=>`<button class="${F.tier===t?'on':''}" onclick="S.fant.tier=${t};save();render(true)">${t?t+' credits':'All costs'}</button>`).join('')}</div>
    <div class="chips">${[['all','All positions'],['G','Guards'],['F','Forwards'],['C','Bigs']].map(([k,v])=>`<button class="${F.pos===k?'on':''}" onclick="S.fant.pos='${k}';save();render(true)">${v}</button>`).join('')}</div>
    ${pool}
-   <p class="muted" style="font-size:10.5px;margin-top:10px;line-height:1.5">$5 = 93+ rating · $4 = 86–92 · $3 = 80–85 · $2 = 74–79 · $1 = 73 and under. Ratings are our estimates of each player’s Rockets years. A lineup with a guard, a forward and a big gets +2; no guard or no big costs −3.</p>
+   <p class="muted" style="font-size:10.5px;margin-top:10px;line-height:1.5">Player cost in credits: 5 = 93+ rating · 4 = 86–92 · 3 = 80–85 · 2 = 74–79 · 1 = 73 and under. Ratings are our estimates of each player’s Rockets years. A lineup with a guard, a forward and a big gets +2; no guard or no big costs −3.</p>
   </div>`;
 }
 function fAdd(id){const F=S.fant,mine=fMine(),left=BUDGET-mine.reduce((a,p)=>a+p.c,0);
