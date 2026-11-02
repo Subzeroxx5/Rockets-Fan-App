@@ -316,7 +316,7 @@ textarea:focus,input:focus{outline:2px solid var(--red)}
     <div class="pcol"><h2 style="color:var(--red2)">Attract younger fans</h2><ul>
       <li>Scan QR codes at event stations for points and climb 5 tiers, Rookie to Hall of Fame</li>
       <li>Your rocket climbs with your points and gets a new upgrade with each win</li>
-      <li>Fantasy: build a 20-credit starting 5 from every era of Rockets history, plus game predictions</li>
+      <li>Fantasy: draft a starting 5 from every era of Rockets history, one random pick at a time, plus game predictions</li>
       <li>Draft War Room: vote on Houston’s pick in the offseason and earn points if you call it</li>
       <li>Challenges, badges and a Houston leaderboard</li>
       <li>Youth & college events: AI literacy, 3v3, H.O.R.S.E., skills challenges, pop-ups</li>
@@ -415,7 +415,7 @@ const EVENTS=[
  {id:'popup',m:'Nov',d:'28',t:'Youth-Designed Pop-Up',loc:'EaDo · 12 PM',aud:['youth','college'],p:'Local students co-design the space: art, music and a limited merch drop.'},
  {id:'tail',m:'Dec',d:'5',t:'Rivalry Tailgate',loc:'Arena lots · 4 PM',aud:['longtime','family','college'],p:'Grills, games and a cornhole bracket before tip-off.'}];
 const AUD={all:'All',youth:'Youth',college:'College',longtime:'Longtime fans',family:'Family'};
-const PERSONAS=[{k:'youth',e:'🧒',n:'Youth',d:'Under 18'},{k:'college',e:'🎓',n:'College',d:'Students in Houston'},{k:'longtime',e:'🏆',n:'Longtime fan',d:'Been here through it all'},{k:'family',e:'👨‍👩‍👧',n:'Family',d:'Bringing the crew'}];
+const PERSONAS=[{k:'youth',e:'🧒',n:'Youth',d:'Under 18'},{k:'college',e:'🎓',n:'College',d:'Students'},{k:'longtime',e:'🏆',n:'Longtime fan',d:'Been here through it all'},{k:'family',e:'👨‍👩‍👧',n:'Family',d:'Bringing the crew'}];
 const SHOP=[
  {n:'Clutch City Tee',p:35,e:'👕'},{n:'Red Nation Hoodie',p:65,e:'🧥'},{n:'Launch Pad Snapback',p:30,e:'🧢'},
  {n:'Youth Pop-Up Collab Tee',p:40,e:'🎨',tag:'Designed by Houston students'},{n:'Rally Towel',p:12,e:'🧣'},{n:'Mini Hoop Set',p:28,e:'🏀'}];
@@ -563,10 +563,15 @@ Jock Landale|C|’20s|70
 Isaiah Hartenstein|C|’10s|70
 Steve Novak|F|’00s|70`;
 const PLAYERS=PLAYERS_RAW.split('\n').map((l,i)=>{const[n,pos,era,o]=l.split('|');const r=+o;return{id:i,n,pos,era,r,c:r>=93?5:r>=86?4:r>=80?3:r>=74?2:1}});
-const BUDGET=20,OPP_BUDGET=25,TIER_W={5:46,4:30,3:14,2:7,1:3};
+const BUDGET=18,OPP_BUDGET=20,TIER_W={5:40,4:30,3:16,2:9,1:5};
 const isG=p=>p.pos.includes('G'),isF=p=>p.pos.includes('F'),isC=p=>p.pos.includes('C');
+/* synergy: a true lineup (2 guards, 2 forwards, 1 big, dual-position players count either way) gets +4 */
+function perfectFit(ps){if(ps.length<5)return false;const slots=['G','G','F','F','C'],used=[];
+  const rec=i=>{if(i===5)return true;for(let j=0;j<5;j++)if(!used[j]&&ps[j].pos.includes(slots[i])){used[j]=1;if(rec(i+1))return true;used[j]=0}return false};
+  return rec(0)}
 function balance(ps){const g=ps.some(isG),f=ps.some(isF),c=ps.some(isC);let b=0,notes=[];
-  if(g&&f&&c){b=2;notes.push(['green','Balanced lineup +2'])}
+  if(perfectFit(ps)){b=4;notes.push(['gold','Perfect synergy +4'])}
+  else if(g&&f&&c){b=2;notes.push(['green','Balanced lineup +2'])}
   if(!g){b-=3;notes.push(['red','No guard −3'])}
   if(!c){b-=3;notes.push(['red','No big man −3'])}
   return{b,notes}}
@@ -600,14 +605,14 @@ const PROSPECTS=[
 function addRookie(i){const p=PROSPECTS[i];if(PLAYERS.some(x=>x.rookie))return;
   PLAYERS.push({id:PLAYERS.length,n:p.n,pos:p.pos,era:DRAFT.year+' rookie',r:73,c:1,rookie:true})}
 function removeRookie(){const r=PLAYERS.find(x=>x.rookie);if(!r)return;const F=S.fant;
-  F.picks=F.picks.filter(id=>id!==r.id);if(F.opp&&F.opp.includes(r.id))F.opp=null;F.game=null;PLAYERS.pop()}
+  F.picks=F.picks.filter(id=>id!==r.id);if(F.offers&&F.offers.includes(r.id))F.offers=null;if(F.opp&&F.opp.includes(r.id))F.opp=null;F.game=null;PLAYERS.pop()}
 function boxScore(ps,total){const w=ps.map(p=>Math.pow(p.r,4)*(0.7+Math.random()*0.6)),sw=w.reduce((a,b)=>a+b,0);
   const rows=ps.map((p,i)=>({id:p.id,pts:Math.round(total*w[i]/sw)})).sort((a,b)=>b.pts-a.pts);
   rows[0].pts+=total-rows.reduce((a,r)=>a+r.pts,0);return rows}
 
 const fresh=()=>({pts:0,spent:0,wins:0,losses:0,games:[],next:0,scans:0,rsvp:{},checked:{},redeemed:[],pred:{},predHist:[],persona:null,classic:false,
   notes:[],unread:0,squad:false,squadGames:0,arena:-1,codes:[],memories:[],shared:false,filter:'all',tab:'home',page:null,arg:null,rseg:'overview',frame:0,badges:[],claimed:[],cart:0,last:null,
-  fseg:'sim',fant:{picks:[],opp:null,game:null,w:0,l:0,streak:0,best:0,tier:0,pos:'all',q:''},
+  fseg:'sim',fant:{picks:[],offers:null,opp:null,game:null,w:0,l:0,streak:0,best:0,tier:0,pos:'all',q:''},
   draft:{vote:null,result:null}});
 let S;
 try{S=Object.assign(fresh(),JSON.parse(localStorage.getItem('ccxp2'))||{})}catch(e){S=fresh()}
@@ -811,7 +816,7 @@ function draftBody(){
      <div class="muted">${p.pos} · ${p.ht} · ${esc(p.from)}</div>
      <div style="margin-top:12px;font-size:13px">${D.vote==null?'You didn’t cast a vote this year.':hit?'<b style="color:var(--gold)">You called it.</b> <span class="boost">+50 points</span>':'Your pick: <b>'+esc(PROSPECTS[D.vote].n)+'</b>. Fans had him at '+Math.round(votes[D.vote]/tot*100)+'%.'}</div>
      <div class="muted" style="margin-top:8px">Fan consensus had ${esc(p.n)} at ${Math.round(votes[res.pick]/tot*100)}%.</div>
-     <button class="btn full" style="margin-top:14px" onclick="S.fseg='sim';S.fant.tier=0;S.fant.pos='all';S.fant.q='${esc(p.n.toLowerCase()).replace(/'/g,'')}';save();render();setTimeout(()=>{const v=$('vault');if(v)v.scrollIntoView({block:'start'})},50)">See him in the player vault · 1 credit</button>
+     <button class="btn full" style="margin-top:14px" onclick="S.fseg='sim';save();render()">He’s in the Fantasy draft pool · 1 credit</button>
      <button class="btn ghost full" style="margin-top:8px" onclick="draftReset()">Reset the War Room (demo)</button></div>`})():'';
   const board=PROSPECTS.map((p,i)=>{const pct=Math.round(votes[i]/tot*100),mine=D.vote===i;
     return `<div class="pros ${mine?'mine':''}"><div class="top"><span class="rk">${i+1}</span>
@@ -822,7 +827,7 @@ function draftBody(){
   return `
   <div class="card" style="background:linear-gradient(135deg,#CE1141,#5a0718);border:none">
    <div class="h" style="font-size:30px;line-height:1">DRAFT WAR ROOM</div>
-   <p style="font-size:12px;opacity:.9;margin-top:6px;line-height:1.45">${DRAFT.year} NBA Draft · Rockets pick #${DRAFT.pick}. Vote for who Houston should take. On draft night, fans who called the pick earn points, and the rookie joins the Fantasy vault.</p>
+   <p style="font-size:12px;opacity:.9;margin-top:6px;line-height:1.45">${DRAFT.year} NBA Draft · Rockets pick #${DRAFT.pick}. Vote for who Houston should take. On draft night, fans who called the pick earn points, and the rookie joins the Fantasy draft pool.</p>
    <div class="row" style="margin-top:10px;justify-content:flex-start;gap:6px"><span class="pill" style="background:rgba(0,0,0,.3);color:#fff">${res?'Draft complete':D.vote==null?'Voting open':'Vote cast'}</span><span class="pill boost" style="background:rgba(0,0,0,.3);color:#fff">Vote +10 · Call it +50</span></div>
   </div>
   ${pickCard}
@@ -839,7 +844,7 @@ function draftNight(){const D=S.draft;if(D.result||D.vote==null)return;
   let t=w.reduce((a,b)=>a+b,0)*Math.random(),k=0;while(t>w[k]){t-=w[k];k++}
   D.result={pick:k};addRookie(k);const p=PROSPECTS[k],hit=D.vote===k;
   if(hit&&!S.classic)addPts(50);
-  push(`Rockets select ${p.n} at #${DRAFT.pick}`,hit?'You called it. +50 points. He’s now in the Fantasy vault at 1 credit.':'He’s now in the Fantasy vault at 1 credit.',hit?'🎯':'📋');
+  push(`Rockets select ${p.n} at #${DRAFT.pick}`,hit?'You called it. +50 points. He’s now in the Fantasy draft pool at 1 credit.':'He’s now in the Fantasy draft pool at 1 credit.',hit?'🎯':'📋');
   done()}
 function draftReset(){removeRookie();S.draft={vote:null,result:null};done()}
 
@@ -849,16 +854,26 @@ const fMine=()=>S.fant.picks.map(fp);
 const tierChip=c=>`<span class="tier t${c}">${c} CR</span>`;
 const pline=(p,right='')=>`<div class="pname"><b>${esc(p.n)}</b><small>${p.pos} · ${p.era}</small></div><span class="ovr">${p.r}</span>${right}`;
 const noteChips=ps=>`<div class="notes"><span class="pill">Team rating ${teamStr(ps).toFixed(1)}</span>${balance(ps).notes.map(([c,t])=>`<span class="pill ${c}">${t}</span>`).join('')}</div>`;
+function fOffers(){const F=S.fant,mine=fMine(),left=BUDGET-mine.reduce((a,p)=>a+p.c,0),max=left-(4-mine.length);
+  const avail=PLAYERS.filter(p=>!F.picks.includes(p.id)),o=[];
+  while(o.length<5){const p=avail[Math.floor(Math.random()*avail.length)];if(!o.includes(p))o.push(p)}
+  if(!o.some(p=>p.c<=max)){const cheap=avail.filter(p=>p.c<=max&&!o.includes(p));o[4]=cheap[Math.floor(Math.random()*cheap.length)]}
+  F.offers=o.map(p=>p.id)}
 function simBody(){
   const F=S.fant,mine=fMine(),spent=mine.reduce((a,p)=>a+p.c,0),left=BUDGET-spent,full=mine.length===5;
   const max=left-(4-mine.length);
+  if(!full&&(!F.offers||F.offers.some(id=>!fp(id)||F.picks.includes(id)))){fOffers();save()}
   const slots=[0,1,2,3,4].map(i=>{const p=mine[i];return p
-    ?`<div class="slot">${tierChip(p.c)}${pline(p,`<button class="x" aria-label="Remove ${esc(p.n)}" onclick="fRemove(${p.id})">✕</button>`)}</div>`
-    :`<div class="slot empty"><span class="tier t0">${i+1}</span><span>Open slot. Pick from the player vault below.</span></div>`}).join('');
+    ?`<div class="slot">${tierChip(p.c)}${pline(p)}</div>`
+    :`<div class="slot empty"><span class="tier t0">${i+1}</span><span>${i===mine.length?'Picking now':'Round '+(i+1)}</span></div>`}).join('');
+  const round=full?'':`<div class="card" id="roundcard"><div class="row"><h3 style="margin:0">Round ${mine.length+1} of 5</h3><span class="pill">${left} credits left</span></div>
+     <p class="muted" style="margin:4px 0 4px">Five random Rockets from every era. Pick one.${mine.length<4?` Save at least ${4-mine.length} credit${4-mine.length===1?'':'s'} for your remaining picks.`:''}</p>
+     ${F.offers.map(fp).map(p=>{const can=p.c<=max;return `<div class="prow" style="${can?'':'opacity:.45'}">${tierChip(p.c)}${pline(p,`<button class="add" onclick="fAdd(${p.id})" ${can?'':'disabled'}>${can?'Pick':'Too much'}</button>`)}</div>`}).join('')}
+     <p class="muted" style="font-size:10.5px;margin-top:10px;line-height:1.5">Synergy: 2 guards, 2 forwards and 1 big = +4. A guard, a forward and a big = +2. No guard or no big = −3 each.</p></div>`;
   let opp='',board='';
   if(F.opp){const o=F.opp.map(fp);
     opp=`<div class="card" id="oppcard"><div class="row"><h3 style="margin:0">The Vault Five</h3><span class="pill red">${o.reduce((a,p)=>a+p.c,0)} of ${OPP_BUDGET} credits</span></div>
-     <p class="muted" style="margin:4px 0 6px">A random Rockets five drawn with more credits, weighted toward the stars.</p>
+     <p class="muted" style="margin:4px 0 6px">A random Rockets five built with ${OPP_BUDGET} credits, weighted toward the stars.</p>
      ${o.map(p=>`<div class="slot">${tierChip(p.c)}${pline(p)}</div>`).join('')}
      ${noteChips(o)}
      <div class="row" style="gap:8px"><button class="btn full" onclick="fTip()" ${full&&!(F.game&&F.game.anim)?'':'disabled'}>🏀 Tip off</button><button class="btn ghost full" onclick="fDraw()" ${F.game&&F.game.anim?'disabled':''}>Redraw opponent</button></div></div>`;}
@@ -875,40 +890,29 @@ function simBody(){
       <span class="pill green boost" style="display:inline-block;margin-top:8px">+${g.win?25:5} points</span></div>
       <div class="scorers">${sc(0,'YOUR TOP SCORERS')}${sc(1,'VAULT TOP SCORERS')}</div>
       <div class="row" style="gap:8px"><button class="btn full" onclick="fTip()">Run it back</button><button class="btn ghost full" onclick="fDraw()">New opponent</button></div>
+      <button class="btn ghost full" style="margin-top:8px" onclick="fClear()">Draft a new five</button>
      </div></div>`;}
-  const pool=PLAYERS.map(p=>{const picked=F.picks.includes(p.id),can=!full&&p.c<=max,show=(!F.tier||p.c===F.tier)&&(F.pos==='all'||p.pos.includes(F.pos));
-    const q=F.q.trim().toLowerCase(),hit=!q||p.n.toLowerCase().includes(q);
-    const btn=picked?`<button class="add on" onclick="fRemove(${p.id})" aria-label="Remove ${esc(p.n)}">✓</button>`:`<button class="add" onclick="fAdd(${p.id})" ${can?'':'disabled'}>Add</button>`;
-    return show?`<div class="prow" data-n="${esc(p.n.toLowerCase())}" ${hit?'':'hidden'}>${tierChip(p.c)}${pline(p,btn)}</div>`:''}).join('');
-  const shown=PLAYERS.filter(p=>(!F.tier||p.c===F.tier)&&(F.pos==='all'||p.pos.includes(F.pos))).length;
   return `
   <div class="card" style="background:linear-gradient(135deg,#CE1141,#5a0718);border:none">
-   <div class="h" style="font-size:30px;line-height:1">BUILD YOUR STARTING 5</div>
-   <p style="font-size:12px;opacity:.9;margin-top:6px;line-height:1.45">Spend ${BUDGET} credits on any five players who wore a Rockets jersey, San Diego to today. Then beat a random Rockets five built with ${OPP_BUDGET} credits.</p>
+   <div class="h" style="font-size:30px;line-height:1">DRAFT YOUR STARTING 5</div>
+   <p style="font-size:12px;opacity:.9;margin-top:6px;line-height:1.45">Five rounds. Each round you get five random players who wore a Rockets jersey, San Diego to today. Pick one per round with ${BUDGET} credits. Then beat a random Rockets five built with ${OPP_BUDGET} credits.</p>
    <div class="row" style="margin-top:10px;justify-content:flex-start;gap:6px"><span class="pill" style="background:rgba(0,0,0,.3);color:#fff">Record ${F.w}–${F.l}</span><span class="pill" style="background:rgba(0,0,0,.3);color:#fff">Best streak ${F.best}</span><span class="pill boost" style="background:rgba(0,0,0,.3);color:#fff">Win +25 · Play +5</span></div>
   </div>
-  <div class="card"><div class="row"><h3 style="margin:0">Your starting 5</h3>${mine.length?`<button class="muted" onclick="fClear()">Clear</button>`:''}</div>
+  <div class="card"><div class="row"><h3 style="margin:0">Your starting 5</h3>${mine.length?`<button class="muted" onclick="fClear()">Start over</button>`:''}</div>
    <div class="budget"><span>Credits</span><span><b>${left}</b> left of ${BUDGET}</span></div>
    <div class="bar" style="margin-bottom:6px"><div style="width:${spent/BUDGET*100}%;background:${left===0?'var(--gold)':'var(--red)'}"></div></div>
    ${slots}
-   ${mine.length?noteChips(mine):''}
-   ${F.opp?'':`<button class="btn full" style="margin-top:6px" onclick="fDraw()" ${full?'':'disabled'}>${full?'Draw your opponent':`Pick ${5-mine.length} more player${5-mine.length===1?'':'s'}`}</button>`}
+   ${full?noteChips(mine):''}
+   ${full&&!F.opp?`<button class="btn full" style="margin-top:6px" onclick="fDraw()">Draw your opponent</button>`:''}
   </div>
-  ${opp}${board}
-  <div class="card" id="vault"><div class="row"><h3 style="margin:0">Player vault</h3><span class="muted" style="font-size:11px">${shown} players</span></div>
-   <input type="text" id="psearch" style="margin:10px 0 8px" placeholder="Search by name" value="${esc(F.q)}" oninput="fSearch(this.value)">
-   <div class="chips" style="margin-bottom:6px">${[0,5,4,3,2,1].map(t=>`<button class="${F.tier===t?'on':''}" onclick="S.fant.tier=${t};save();render(true)">${t?t+' credits':'All costs'}</button>`).join('')}</div>
-   <div class="chips">${[['all','All positions'],['G','Guards'],['F','Forwards'],['C','Bigs']].map(([k,v])=>`<button class="${F.pos===k?'on':''}" onclick="S.fant.pos='${k}';save();render(true)">${v}</button>`).join('')}</div>
-   ${pool}
-   <p class="muted" style="font-size:10.5px;margin-top:10px;line-height:1.5">Player cost in credits: 5 = 93+ rating · 4 = 86–92 · 3 = 80–85 · 2 = 74–79 · 1 = 73 and under. Ratings are our estimates of each player’s Rockets years. A lineup with a guard, a forward and a big gets +2; no guard or no big costs −3.</p>
-  </div>`;
+  ${round}${opp}${board}
+  <p class="muted" style="font-size:10.5px;line-height:1.5;margin-top:-2px">Player cost in credits: 5 = 93+ rating · 4 = 86–92 · 3 = 80–85 · 2 = 74–79 · 1 = 73 and under. Ratings are our estimates of each player’s Rockets years.</p>`;
 }
 function fAdd(id){const F=S.fant,mine=fMine(),left=BUDGET-mine.reduce((a,p)=>a+p.c,0);
-  if(mine.length>=5||F.picks.includes(id)||fp(id).c>left-(4-mine.length))return;
-  F.picks.push(id);F.game=null;if(F.opp&&F.opp.includes(id))F.opp=null;save();render(true)}
-function fRemove(id){S.fant.picks=S.fant.picks.filter(x=>x!==id);S.fant.game=null;save();render(true)}
-function fClear(){Object.assign(S.fant,{picks:[],opp:null,game:null});save();render(true)}
-function fSearch(v){S.fant.q=v;save();const q=v.trim().toLowerCase();document.querySelectorAll('#vault .prow').forEach(r=>r.hidden=!!q&&!r.dataset.n.includes(q))}
+  if(mine.length>=5||F.picks.includes(id)||!(F.offers||[]).includes(id)||fp(id).c>left-(4-mine.length))return;
+  F.picks.push(id);F.offers=null;F.game=null;F.opp=null;save();render(true);
+  if(F.picks.length===5){const el=$('sbcard')||document.querySelector('.budget');if(el)el.scrollIntoView({behavior:'smooth',block:'center'})}}
+function fClear(){Object.assign(S.fant,{picks:[],offers:null,opp:null,game:null});save();render(true)}
 function fDraw(){const F=S.fant;F.opp=genOpp(F.picks).map(p=>p.id);F.game=null;save();render(true);const el=$('oppcard');if(el)el.scrollIntoView({behavior:'smooth',block:'start'})}
 function fTip(){const F=S.fant;if(!F.opp||F.picks.length<5)return;
   const a=fMine(),b=F.opp.map(fp),g=simGame5(a,b);
